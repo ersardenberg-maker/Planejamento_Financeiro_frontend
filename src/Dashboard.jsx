@@ -38,7 +38,7 @@ function BarraProgresso({ valor, max, cor }) {
 function CardSaldo({ label, valor, sub, destaque }) {
   const positivo = parseFloat(valor) >= 0;
   return (
-    <div style={{ ...s.cardSaldo, borderColor: destaque ? (positivo ? "#22c55e" : "#ef4444") : "#1e293b" }}>
+    <div style={{ ...s.cardSaldo, borderColor: destaque ? (positivo ? "#22c55e" : "#ef4444") : "#1e293b", ...(destaque ? { gridColumn: "1 / -1" } : {}) }}>
       <span style={s.cardSaldoLabel}>{label}</span>
       <span style={{
         ...s.cardSaldoValor,
@@ -234,16 +234,18 @@ const s = {
   },
   saldoGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-    gap: 16,
+    gridTemplateColumns: "1fr 1fr",
+    gridTemplateRows: "auto auto",
+    gap: 12,
   },
   cardSaldo: {
     background: "#0f172a", border: "1px solid",
-    borderRadius: 16, padding: "16px 18px",
+    borderRadius: 16, padding: "14px 16px",
     display: "flex", flexDirection: "column", gap: 4,
+    overflow: "hidden", minWidth: 0,
   },
   cardSaldoLabel: { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8" },
-  cardSaldoValor: { fontWeight: 800, letterSpacing: -0.5, marginTop: 4 },
+  cardSaldoValor: { fontWeight: 800, letterSpacing: -0.5, marginTop: 4, wordBreak: 'break-all', lineHeight: 1.2 },
   cardSaldoSub:   { fontSize: 12, color: "#7c8fa8", marginTop: 2 },
   secao: {
     background: "#0a1628", border: "1px solid #1e293b",
