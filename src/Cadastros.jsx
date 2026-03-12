@@ -145,7 +145,7 @@ function SecaoCategorias() {
           ))}
           {filtradas.length === 0 && (
             <div style={s.vazio}>
-              <span style={{ color: "#475569" }}>{filtroAtivo ? "Nenhuma categoria ativa." : "Nenhuma categoria inativa."}</span>
+              <span style={{ color: "#94a3b8" }}>{filtroAtivo ? "Nenhuma categoria ativa." : "Nenhuma categoria inativa."}</span>
             </div>
           )}
         </div>
@@ -176,8 +176,8 @@ function SecaoCategorias() {
                   style={{
                     ...s.tipoBotao,
                     background: form.tipo === t.value ? t.cor + "22" : "#1e293b",
-                    color:      form.tipo === t.value ? t.cor : "#475569",
-                    border:     `1px solid ${form.tipo === t.value ? t.cor : "#334155"}`,
+                    color:      form.tipo === t.value ? t.cor : "#94a3b8",
+                    border:     `1px solid ${form.tipo === t.value ? t.cor : "#7c8fa8"}`,
                   }}
                   onClick={() => set("tipo", t.value)}
                 >
@@ -298,7 +298,7 @@ function SecaoCartoes() {
         <div style={s.listaSimples}>
           {filtrados.length === 0 && (
             <div style={s.vazio}>
-              <span style={{ color: "#475569" }}>{filtroAtivo ? "Nenhum cartão ativo." : "Nenhum cartão inativo."}</span>
+              <span style={{ color: "#94a3b8" }}>{filtroAtivo ? "Nenhum cartão ativo." : "Nenhum cartão inativo."}</span>
             </div>
           )}
           {filtrados.map(c => (
@@ -382,15 +382,15 @@ const s = {
   page:       { minHeight: "100vh", background: "#080f1a", fontFamily: "'DM Sans', sans-serif", color: "#e2e8f0", paddingBottom: 80 },
   topbar:     { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px", borderBottom: "1px solid #1e293b", background: "#080f1acc", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 },
   topbarTitle:{ fontSize: 20, fontWeight: 800, letterSpacing: -0.5 },
-  topbarSub:  { fontSize: 11, color: "#475569", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
+  topbarSub:  { fontSize: 11, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
   body:       { display: "flex", flexDirection: "column", gap: 24, padding: "20px", maxWidth: 700, margin: "0 auto" },
   secao:      { background: "#0a1628", border: "1px solid #1e293b", borderRadius: 16, overflow: "hidden" },
   secaoHeader:{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid #1e293b", background: "#0f172a", flexWrap: "wrap", gap: 10 },
   secaoTitulo:{ fontSize: 16, fontWeight: 800 },
-  secaoSub:   { fontSize: 11, color: "#475569", marginTop: 2 },
+  secaoSub:   { fontSize: 11, color: "#94a3b8", marginTop: 2 },
   filtroRow:  { display: "flex", gap: 4 },
-  filtroBotao:{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 8, color: "#475569", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer" },
-  filtroBotaoAtivo: { background: "#1e293b", color: "#e2e8f0", borderColor: "#334155" },
+  filtroBotao:{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 8, color: "#94a3b8", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer" },
+  filtroBotaoAtivo: { background: "#1e293b", color: "#e2e8f0", borderColor: "#7c8fa8" },
   btnPrimario:{ background: "#1d4ed8", border: "none", borderRadius: 10, color: "#fff", padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
   loadingWrap:{ display: "flex", alignItems: "center", justifyContent: "center", padding: 40 },
   spinner:    { width: 24, height: 24, borderRadius: "50%", border: "3px solid #1e293b", borderTopColor: "#3b82f6", animation: "spin 0.8s linear infinite" },
@@ -399,10 +399,10 @@ const s = {
   grupo:      { borderBottom: "1px solid #0f172a" },
   grupoHeader:{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 20px", background: "#0c1420", borderLeft: "3px solid" },
   grupoTag:   { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, padding: "3px 10px", borderRadius: 6 },
-  grupoCount: { fontSize: 12, color: "#475569", fontWeight: 600 },
+  grupoCount: { fontSize: 12, color: "#94a3b8", fontWeight: 600 },
   linhaItem:  { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 20px", borderBottom: "1px solid #0f172a", transition: "background 0.15s" },
   itemNome:   { fontSize: 14, fontWeight: 600, color: "#cbd5e1" },
-  itemMeta:   { display: "flex", gap: 10, fontSize: 11, color: "#475569", marginTop: 2, flexWrap: "wrap" },
+  itemMeta:   { display: "flex", gap: 10, fontSize: 11, color: "#94a3b8", marginTop: 2, flexWrap: "wrap" },
   itemAcoes:  { display: "flex", gap: 4 },
   btnAcao:    { background: "none", border: "none", fontSize: 16, cursor: "pointer", padding: "4px 6px", borderRadius: 6 },
   vazio:      { padding: "32px 20px", textAlign: "center" },
@@ -410,10 +410,10 @@ const s = {
   modal:      { background: "#0f172a", border: "1px solid #1e293b", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 480, maxHeight: "90dvh", overflowY: "auto" },
   modalHeader:{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 20px 0", position: "sticky", top: 0, background: "#0f172a" },
   modalTitulo:{ fontSize: 18, fontWeight: 800 },
-  modalFechar:{ background: "none", border: "none", color: "#475569", fontSize: 18, cursor: "pointer" },
+  modalFechar:{ background: "none", border: "none", color: "#94a3b8", fontSize: 18, cursor: "pointer" },
   modalBody:  { padding: "20px", display: "flex", flexDirection: "column", gap: 16 },
   formField:  { display: "flex", flexDirection: "column", gap: 6 },
-  formLabel:  { fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 },
+  formLabel:  { fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
   formInput:  { background: "#1e293b", border: "1px solid #334155", borderRadius: 10, color: "#e2e8f0", padding: "12px 14px", fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" },
   tipoGrid:   { display: "flex", flexDirection: "column", gap: 8 },
   tipoBotao:  { padding: "12px 16px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, textAlign: "left", transition: "all 0.15s" },

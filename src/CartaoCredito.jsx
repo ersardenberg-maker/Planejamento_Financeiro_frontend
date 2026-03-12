@@ -105,7 +105,7 @@ function ModalNovoLancamento({ cartoes, categorias, mes, ano, onSalvar, onFechar
           <div style={s.toggleRow}>
             <span style={s.toggleLabel}>Compra parcelada?</span>
             <button
-              style={{ ...s.toggleBtn, background: form.parcelado ? "#1d4ed8" : "#1e293b", color: form.parcelado ? "#fff" : "#475569" }}
+              style={{ ...s.toggleBtn, background: form.parcelado ? "#1d4ed8" : "#1e293b", color: form.parcelado ? "#fff" : "#94a3b8" }}
               onClick={() => set("parcelado", !form.parcelado)}
             >
               {form.parcelado ? "Sim" : "Não"}
@@ -124,8 +124,8 @@ function ModalNovoLancamento({ cartoes, categorias, mes, ano, onSalvar, onFechar
                       style={{
                         ...s.parcelaOpcao,
                         background: form.num_parcelas === String(n) ? "#1d4ed8" : "#1e293b",
-                        color:      form.num_parcelas === String(n) ? "#fff" : "#475569",
-                        border:     `1px solid ${form.num_parcelas === String(n) ? "#1d4ed8" : "#334155"}`,
+                        color:      form.num_parcelas === String(n) ? "#fff" : "#94a3b8",
+                        border:     `1px solid ${form.num_parcelas === String(n) ? "#1d4ed8" : "#7c8fa8"}`,
                       }}
                       onClick={() => set("num_parcelas", String(n))}
                     >
@@ -304,7 +304,7 @@ function ModalImportar({ cartoes, categorias, mes, ano, onSalvar, onFechar }) {
                 onClick={() => inputRef.current.click()}
               >
                 <span style={{ fontSize: 32 }}>📄</span>
-                <span style={{ color: "#475569", fontSize: 13 }}>Clique para selecionar o arquivo CSV</span>
+                <span style={{ color: "#94a3b8", fontSize: 13 }}>Clique para selecionar o arquivo CSV</span>
                 <input ref={inputRef} type="file" accept=".csv,.txt" style={{ display: "none" }} onChange={handleArquivo} />
               </div>
             </>
@@ -533,7 +533,7 @@ export default function CartaoCredito() {
             {lancsFiltrados.length === 0 ? (
               <div style={s.vazio}>
                 <span style={{ fontSize: 36 }}>💳</span>
-                <span style={{ color: "#475569", marginTop: 12 }}>
+                <span style={{ color: "#94a3b8", marginTop: 12 }}>
                   Nenhum lançamento em {MESES[mes-1]}/{ano}.
                 </span>
               </div>
@@ -608,23 +608,23 @@ const s = {
     flexWrap: "wrap", gap: 12,
   },
   topbarTitle:  { fontSize: 20, fontWeight: 800, letterSpacing: -0.5 },
-  topbarSub:    { fontSize: 11, color: "#475569", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
+  topbarSub:    { fontSize: 11, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
   topbarAcoes:  { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" },
   mesSelector:  { display: "flex", alignItems: "center", gap: 4, background: "#0f172a", borderRadius: 10, border: "1px solid #1e293b", padding: "4px 8px" },
   mesLabel:     { fontSize: 13, fontWeight: 700, minWidth: 130, textAlign: "center", color: "#cbd5e1" },
-  navBtn:       { background: "none", border: "none", color: "#475569", fontSize: 20, cursor: "pointer", padding: "0 8px", lineHeight: 1, borderRadius: 6 },
+  navBtn:       { background: "none", border: "none", color: "#94a3b8", fontSize: 20, cursor: "pointer", padding: "0 8px", lineHeight: 1, borderRadius: 6 },
   btnPrimario:  { background: "#1d4ed8", border: "none", borderRadius: 10, color: "#fff", padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
   btnSecundario:{ background: "#0f172a", border: "1px solid #334155", borderRadius: 10, color: "#94a3b8", padding: "8px 14px", fontSize: 12, fontWeight: 600, cursor: "pointer" },
   filtroCartoes:{ display: "flex", gap: 6, padding: "12px 20px", flexWrap: "wrap", borderBottom: "1px solid #1e293b" },
-  filtroBotao:  { background: "#0f172a", border: "1px solid #1e293b", borderRadius: 8, color: "#475569", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer" },
-  filtroBotaoAtivo: { background: "#1e293b", color: "#e2e8f0", borderColor: "#334155" },
+  filtroBotao:  { background: "#0f172a", border: "1px solid #1e293b", borderRadius: 8, color: "#94a3b8", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer" },
+  filtroBotaoAtivo: { background: "#1e293b", color: "#e2e8f0", borderColor: "#7c8fa8" },
   body:         { display: "flex", flexDirection: "column", gap: 16, padding: "20px", maxWidth: 800, margin: "0 auto" },
   loadingWrap:  { display: "flex", alignItems: "center", justifyContent: "center", padding: 80 },
   spinner:      { width: 32, height: 32, borderRadius: "50%", border: "3px solid #1e293b", borderTopColor: "#3b82f6", animation: "spin 0.8s linear infinite" },
   vazio:        { display: "flex", flexDirection: "column", alignItems: "center", padding: 60, textAlign: "center" },
   resumoCard:   { background: "#0a1628", border: "1px solid #1e293b", borderRadius: 16, overflow: "hidden" },
   resumoTotal:  { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid #1e293b" },
-  resumoTotalLabel: { fontSize: 12, color: "#475569", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8 },
+  resumoTotalLabel: { fontSize: 12, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8 },
   resumoTotalValor: { fontSize: 24, fontWeight: 800, color: "#e2e8f0" },
   resumoCats:   { padding: "12px 20px", display: "flex", flexDirection: "column", gap: 10 },
   resumoCatLinha: { display: "flex", alignItems: "center", gap: 12 },
@@ -634,25 +634,25 @@ const s = {
   barraPreenchidaMini: { height: "100%", borderRadius: 99, background: "#3b82f6", transition: "width 0.5s ease" },
   listaCard:    { background: "#0a1628", border: "1px solid #1e293b", borderRadius: 16, overflow: "hidden" },
   listaHeader:  { padding: "12px 20px", borderBottom: "1px solid #1e293b" },
-  listaHeaderTitulo: { fontSize: 12, color: "#475569", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8 },
+  listaHeaderTitulo: { fontSize: 12, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8 },
   linhaLanc:    { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 20px", borderBottom: "1px solid #0f172a", gap: 12 },
   linhaLancEsq: { display: "flex", flexDirection: "column", gap: 3, flex: 1, minWidth: 0 },
   linhaLancDesc:{ fontSize: 14, fontWeight: 600, color: "#cbd5e1", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
   linhaLancMeta:{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" },
   linhaLancCat: { fontSize: 11, color: "#3b82f6", fontWeight: 600 },
-  linhaLancSep: { fontSize: 11, color: "#334155" },
-  linhaLancData:{ fontSize: 11, color: "#475569" },
+  linhaLancSep: { fontSize: 11, color: "#7c8fa8" },
+  linhaLancData:{ fontSize: 11, color: "#94a3b8" },
   linhaLancDir: { display: "flex", alignItems: "center", gap: 8 },
   linhaLancValor: { fontSize: 14, fontWeight: 700, color: "#e2e8f0", whiteSpace: "nowrap" },
-  btnDeletar:   { background: "none", border: "none", color: "#334155", fontSize: 14, cursor: "pointer", padding: "4px 6px", borderRadius: 6, transition: "color 0.15s" },
+  btnDeletar:   { background: "none", border: "none", color: "#7c8fa8", fontSize: 14, cursor: "pointer", padding: "4px 6px", borderRadius: 6, transition: "color 0.15s" },
   overlay:      { position: "fixed", inset: 0, background: "#000000bb", zIndex: 200, display: "flex", alignItems: "flex-end", justifyContent: "center" },
   modal:        { background: "#0f172a", border: "1px solid #1e293b", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 520, maxHeight: "90dvh", overflowY: "auto" },
   modalHeader:  { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 20px 0", position: "sticky", top: 0, background: "#0f172a" },
   modalTitulo:  { fontSize: 18, fontWeight: 800 },
-  modalFechar:  { background: "none", border: "none", color: "#475569", fontSize: 18, cursor: "pointer" },
+  modalFechar:  { background: "none", border: "none", color: "#94a3b8", fontSize: 18, cursor: "pointer" },
   modalBody:    { padding: "20px", display: "flex", flexDirection: "column", gap: 14 },
   formField:    { display: "flex", flexDirection: "column", gap: 6 },
-  formLabel:    { fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 },
+  formLabel:    { fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
   formInput:    { background: "#1e293b", border: "1px solid #334155", borderRadius: 10, color: "#e2e8f0", padding: "12px 14px", fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" },
   btnSalvarModal:{ background: "#1d4ed8", border: "none", borderRadius: 12, color: "#fff", padding: "14px", fontSize: 15, fontWeight: 700, cursor: "pointer" },
   erro:         { color: "#ef4444", fontSize: 13, background: "#1a0a0a", borderRadius: 8, padding: "10px 14px" },
@@ -660,7 +660,7 @@ const s = {
   dropzone:     { border: "2px dashed #1e293b", borderRadius: 12, padding: "32px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, cursor: "pointer", transition: "border-color 0.2s" },
   tabelaPreview:{ width: "100%", borderCollapse: "collapse", fontSize: 11 },
   thPreview:    { padding: "6px 8px", background: "#1e293b", color: "#94a3b8", textAlign: "left", fontWeight: 700 },
-  tdPreview:    { padding: "6px 8px", color: "#64748b", borderBottom: "1px solid #0f172a" },
+  tdPreview:    { padding: "6px 8px", color: "#94a3b8", borderBottom: "1px solid #0f172a" },
   linhaCategorizacao: { background: "#0f172a", borderRadius: 10, padding: "10px 12px", display: "flex", flexDirection: "column", gap: 8 },
   linhaCatInfo: { display: "flex", justifyContent: "space-between", alignItems: "center" },
   linhaCatDesc: { fontSize: 13, color: "#cbd5e1", fontWeight: 600, flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
@@ -674,7 +674,7 @@ const s = {
   previewHeader:{ padding: "10px 14px", borderBottom: "1px solid #1e293b" },
   previewLista: { maxHeight: 160, overflowY: "auto" },
   previewLinha: { display: "flex", alignItems: "center", gap: 10, padding: "8px 14px", borderBottom: "1px solid #0d1525" },
-  previewNum:   { fontSize: 11, color: "#475569", minWidth: 36 },
+  previewNum:   { fontSize: 11, color: "#94a3b8", minWidth: 36 },
   previewMes:   { fontSize: 12, color: "#94a3b8", flex: 1 },
   previewValor: { fontSize: 12, fontWeight: 700, color: "#3b82f6" },
 };

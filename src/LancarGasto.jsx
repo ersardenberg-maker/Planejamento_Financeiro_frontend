@@ -181,7 +181,7 @@ export default function LancarGasto() {
               key={t.key}
               style={{
                 ...s.aba,
-                color:        abaAtiva === t.key ? t.cor : "#475569",
+                color:        abaAtiva === t.key ? t.cor : "#8899aa",
                 borderBottom: abaAtiva === t.key ? `2px solid ${t.cor}` : "2px solid transparent",
                 background:   abaAtiva === t.key ? t.corFundo + "88" : "transparent",
               }}
@@ -197,7 +197,7 @@ export default function LancarGasto() {
           <label style={s.label}>Categoria</label>
           <div style={s.catGrid}>
             {catsDaAba.length === 0 && (
-              <span style={{ color:"#475569", fontSize:13 }}>Nenhuma categoria cadastrada.</span>
+              <span style={{ color:"#94a3b8", fontSize:13 }}>Nenhuma categoria cadastrada.</span>
             )}
             {catsDaAba.map(c => (
               <button
@@ -255,7 +255,7 @@ export default function LancarGasto() {
             <div style={s.toggleRow}>
               <span style={s.toggleLabel}>Compra parcelada?</span>
               <button
-                style={{ ...s.toggleBtn, background: form.parcelado ? "#7c3aed" : "#1e1e2e", color: form.parcelado ? "#fff" : "#475569" }}
+                style={{ ...s.toggleBtn, background: form.parcelado ? "#7c3aed" : "#1e1e2e", color: form.parcelado ? "#fff" : "#94a3b8" }}
                 onClick={() => set("parcelado", !form.parcelado)}
               >
                 {form.parcelado ? "Sim" : "Não"}
@@ -274,7 +274,7 @@ export default function LancarGasto() {
                   style={{
                     ...s.parcelaOpcao,
                     background: form.num_parcelas === String(n) ? "#7c3aed" : "#1e1e2e",
-                    color:      form.num_parcelas === String(n) ? "#fff" : "#475569",
+                    color:      form.num_parcelas === String(n) ? "#fff" : "#94a3b8",
                     border:     `1px solid ${form.num_parcelas === String(n) ? "#7c3aed" : "#2a2a3e"}`,
                   }}
                   onClick={() => set("num_parcelas", String(n))}
@@ -286,7 +286,7 @@ export default function LancarGasto() {
             {/* Preview parcelas */}
             {valorFloat > 0 && (
               <div style={s.previewParcelas}>
-                <div style={{ padding:"8px 12px", borderBottom:"1px solid #1e1e2e", fontSize:11, color:"#475569" }}>
+                <div style={{ padding:"8px 12px", borderBottom:"1px solid #1e1e2e", fontSize:11, color:"#94a3b8" }}>
                   {form.num_parcelas}x de R$ {(valorFloat / parseInt(form.num_parcelas)).toFixed(2).replace(".",",")}
                 </div>
                 <div style={{ maxHeight:120, overflowY:"auto" }}>
@@ -329,7 +329,7 @@ export default function LancarGasto() {
 
         {/* Descrição */}
         <div style={s.field}>
-          <label style={s.label}>Descrição <span style={{ color:"#334155" }}>(opcional)</span></label>
+          <label style={s.label}>Descrição <span style={{ color:"#7c8fa8" }}>(opcional)</span></label>
           <input
             style={s.input}
             placeholder="Ex: Mercado, Uber, Netflix..."
@@ -380,7 +380,7 @@ const s = {
     padding:"20px 24px 0", boxSizing:"border-box",
   },
   headerLabel: { color:"#7c3aed", fontWeight:700, fontSize:15, letterSpacing:1, textTransform:"uppercase" },
-  headerDate:  { color:"#555", fontSize:13 },
+  headerDate:  { color:"#94a3b8", fontSize:13 },
   valorBlock: {
     display:"flex", alignItems:"baseline", gap:8,
     padding:"32px 24px 16px",
@@ -407,7 +407,7 @@ const s = {
     textTransform:"uppercase", letterSpacing:0.8, transition:"all 0.15s",
   },
   field:  { display:"flex", flexDirection:"column", gap:8, padding:"0 20px" },
-  label:  { color:"#666", fontSize:12, fontWeight:600, textTransform:"uppercase", letterSpacing:1 },
+  label:  { color:"#94a3b8", fontSize:12, fontWeight:600, textTransform:"uppercase", letterSpacing:1 },
   catGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(90px, 1fr))", gap:8 },
   catBtn: { padding:"10px 8px", borderRadius:10, cursor:"pointer", fontSize:13, fontWeight:600, transition:"all 0.15s", lineHeight:1.3 },
   meioRow: { display:"flex", gap:6, flexWrap:"wrap" },
@@ -435,7 +435,7 @@ const s = {
   parcelaOpcao: { padding:"6px 12px", borderRadius:8, cursor:"pointer", fontSize:13, fontWeight:700, transition:"all 0.15s" },
   previewParcelas: { background:"#1a1a2e", borderRadius:10, overflow:"hidden", marginTop:4 },
   previewLinha: { display:"flex", alignItems:"center", gap:10, padding:"6px 12px", borderBottom:"1px solid #1e1e2e" },
-  previewNum:   { fontSize:11, color:"#475569", minWidth:32 },
+  previewNum:   { fontSize:11, color:"#94a3b8", minWidth:32 },
   previewMes:   { fontSize:12, color:"#94a3b8", flex:1 },
   previewValor: { fontSize:12, fontWeight:700, color:"#7c3aed" },
   error: { color:"#ef4444", fontSize:13, margin:"0 20px", background:"#1a0a0a", borderRadius:8, padding:"10px 14px" },

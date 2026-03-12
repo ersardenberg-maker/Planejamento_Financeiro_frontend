@@ -52,7 +52,7 @@ function CelulaValor({ valor, onChange, saving }) {
 
   return (
     <span
-      style={{ ...s.celulaValor, color: valor > 0 ? "#e2e8f0" : "#334155", cursor: saving ? "default" : "pointer" }}
+      style={{ ...s.celulaValor, color: valor > 0 ? "#e2e8f0" : "#7c8fa8", cursor: saving ? "default" : "pointer" }}
       onClick={saving ? undefined : iniciarEdicao}
       title="Clique para editar"
     >
@@ -217,7 +217,7 @@ export default function Planejamento() {
       {loading ? (
         <div style={s.loadingWrap}>
           <div style={s.spinner} />
-          <span style={{ color: "#475569", marginTop: 12 }}>Carregando...</span>
+          <span style={{ color: "#94a3b8", marginTop: 12 }}>Carregando...</span>
         </div>
       ) : (
         <div style={s.tablesWrap}>
@@ -295,7 +295,7 @@ const s = {
     flexWrap: "wrap", gap: 16,
   },
   topbarTitle: { fontSize: 22, fontWeight: 800, letterSpacing: -0.5 },
-  topbarSub:   { fontSize: 12, color: "#475569", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
+  topbarSub:   { fontSize: 12, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
   topbarControls: { display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" },
   mesSelector: {
     display: "flex", alignItems: "center", gap: 4,
@@ -304,7 +304,7 @@ const s = {
   },
   mesLabel: { fontSize: 14, fontWeight: 700, minWidth: 140, textAlign: "center", color: "#cbd5e1" },
   navBtn: {
-    background: "none", border: "none", color: "#475569",
+    background: "none", border: "none", color: "#94a3b8",
     fontSize: 20, cursor: "pointer", padding: "0 6px", lineHeight: 1,
     borderRadius: 6, transition: "color 0.15s",
   },
@@ -368,7 +368,7 @@ const s = {
   table: { width: "100%", borderCollapse: "collapse" },
   th: {
     padding: "10px 20px", fontSize: 11, fontWeight: 700,
-    color: "#475569", textTransform: "uppercase", letterSpacing: 0.8,
+    color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8,
     textAlign: "left",
   },
   td: { padding: "12px 20px", fontSize: 14, color: "#cbd5e1", borderTop: "1px solid #0f172a" },

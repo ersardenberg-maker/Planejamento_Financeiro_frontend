@@ -166,7 +166,7 @@ export default function DespesasVariaveis() {
           {itens.length === 0 && (
             <div style={s.vazio}>
               <span style={{ fontSize: 40 }}>📋</span>
-              <span style={{ color: "#475569", marginTop: 12 }}>
+              <span style={{ color: "#94a3b8", marginTop: 12 }}>
                 Nenhum dado para {MESES[mes-1]}/{ano}.<br/>
                 Defina o planejamento ou adicione lançamentos.
               </span>
@@ -213,7 +213,7 @@ const s = {
     flexWrap: "wrap", gap: 12,
   },
   topbarTitle: { fontSize: 20, fontWeight: 800, letterSpacing: -0.5 },
-  topbarSub:   { fontSize: 11, color: "#475569", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
+  topbarSub:   { fontSize: 11, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
   mesSelector: {
     display: "flex", alignItems: "center", gap: 4,
     background: "#0f172a", borderRadius: 10,
@@ -221,7 +221,7 @@ const s = {
   },
   mesLabel: { fontSize: 13, fontWeight: 700, minWidth: 140, textAlign: "center", color: "#cbd5e1" },
   navBtn: {
-    background: "none", border: "none", color: "#475569",
+    background: "none", border: "none", color: "#94a3b8",
     fontSize: 20, cursor: "pointer", padding: "0 8px", lineHeight: 1, borderRadius: 6,
   },
   loadingWrap: {
@@ -250,9 +250,9 @@ const s = {
     fontSize: 26, fontWeight: 800, letterSpacing: -0.5,
     flexWrap: "wrap",
   },
-  resumoSep:    { color: "#334155", fontWeight: 400 },
-  resumoPlan:   { color: "#475569", fontSize: 18 },
-  resumoLegenda: { fontSize: 11, color: "#475569", marginTop: 4, textTransform: "uppercase", letterSpacing: 0.8 },
+  resumoSep:    { color: "#7c8fa8", fontWeight: 400 },
+  resumoPlan:   { color: "#94a3b8", fontSize: 18 },
+  resumoLegenda: { fontSize: 11, color: "#94a3b8", marginTop: 4, textTransform: "uppercase", letterSpacing: 0.8 },
   badge: {
     fontSize: 12, fontWeight: 600, padding: "6px 12px",
     borderRadius: 20, background: "#0a1628", border: "1px solid #1e293b",
@@ -298,7 +298,7 @@ const s = {
   cartaoValorBloco: {
     display: "flex", flexDirection: "column", gap: 2,
   },
-  cartaoValorLabel: { fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 },
+  cartaoValorLabel: { fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
   cartaoValor:      { fontSize: 13, fontWeight: 700, color: "#94a3b8" },
 };
 

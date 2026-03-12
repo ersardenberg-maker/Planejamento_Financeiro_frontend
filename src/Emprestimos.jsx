@@ -344,7 +344,7 @@ export default function Emprestimos() {
         ) : emprestimos.length === 0 ? (
           <div style={s.vazio}>
             <span style={{ fontSize: 40 }}>🏦</span>
-            <span style={{ color: "#475569", marginTop: 12 }}>
+            <span style={{ color: "#94a3b8", marginTop: 12 }}>
               {filtro === "ativo" ? "Nenhum empréstimo ativo." : "Nenhum empréstimo encontrado."}
             </span>
             <button style={{ ...s.btnNovo, marginTop: 20 }} onClick={() => setModalAberto(true)}>
@@ -375,14 +375,14 @@ const s = {
     flexWrap: "wrap", gap: 12,
   },
   topbarTitle: { fontSize: 20, fontWeight: 800, letterSpacing: -0.5 },
-  topbarSub:   { fontSize: 11, color: "#475569", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
+  topbarSub:   { fontSize: 11, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
   topbarAcoes: { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" },
   filtroRow:   { display: "flex", gap: 4 },
   filtroBotao: {
     background: "#0f172a", border: "1px solid #1e293b", borderRadius: 8,
-    color: "#475569", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer",
+    color: "#94a3b8", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer",
   },
-  filtroBotaoAtivo: { background: "#1e293b", color: "#e2e8f0", borderColor: "#334155" },
+  filtroBotaoAtivo: { background: "#1e293b", color: "#e2e8f0", borderColor: "#7c8fa8" },
   btnNovo: {
     background: "#1d4ed8", border: "none", borderRadius: 10,
     color: "#fff", padding: "8px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer",
@@ -392,7 +392,7 @@ const s = {
     borderBottom: "1px solid #1e293b", flexWrap: "wrap",
   },
   resumoBloco: { display: "flex", flexDirection: "column", gap: 2 },
-  resumoLabel: { fontSize: 11, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 },
+  resumoLabel: { fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
   resumoValor: { fontSize: 22, fontWeight: 800, letterSpacing: -0.5 },
   body: { display: "flex", flexDirection: "column", gap: 16, padding: "20px", maxWidth: 800, margin: "0 auto" },
   loadingWrap: { display: "flex", alignItems: "center", justifyContent: "center", padding: 80 },
@@ -401,23 +401,23 @@ const s = {
   card: { background: "#0a1628", border: "1px solid", borderRadius: 16, padding: "20px", display: "flex", flexDirection: "column", gap: 16 },
   cardHeader:      { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 },
   cardNome:        { fontSize: 16, fontWeight: 800, color: "#e2e8f0" },
-  cardCredor:      { fontSize: 12, color: "#475569", marginTop: 2 },
+  cardCredor:      { fontSize: 12, color: "#94a3b8", marginTop: 2 },
   cardParcela:     { fontSize: 20, fontWeight: 800, color: "#3b82f6", textAlign: "right" },
-  cardParcelaLabel:{ fontSize: 11, color: "#475569", fontWeight: 400 },
+  cardParcelaLabel:{ fontSize: 11, color: "#94a3b8", fontWeight: 400 },
   badge:           { display: "inline-block", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, marginTop: 4 },
-  barraLabel:      { fontSize: 11, color: "#475569" },
+  barraLabel:      { fontSize: 11, color: "#94a3b8" },
   barraFundo:      { width: "100%", height: 8, background: "#1e293b", borderRadius: 99, overflow: "hidden" },
   barraPreenchida: { height: "100%", borderRadius: 99, transition: "width 0.6s ease" },
   cardInfo:        { display: "flex", gap: 0, borderTop: "1px solid #1e293b", paddingTop: 12 },
   cardInfoBloco:   { flex: 1, display: "flex", flexDirection: "column", gap: 2 },
-  cardInfoLabel:   { fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 },
+  cardInfoLabel:   { fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
   cardInfoValor:   { fontSize: 13, fontWeight: 700, color: "#94a3b8" },
   proximaParcela:  { background: "#0f172a", borderRadius: 10, padding: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" },
   btnPagar:        { background: "#1d4ed8", border: "none", borderRadius: 8, color: "#fff", padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" },
-  btnExpandir:     { background: "none", border: "1px solid #1e293b", borderRadius: 8, color: "#475569", padding: "8px", fontSize: 12, cursor: "pointer", textAlign: "center" },
+  btnExpandir:     { background: "none", border: "1px solid #1e293b", borderRadius: 8, color: "#94a3b8", padding: "8px", fontSize: 12, cursor: "pointer", textAlign: "center" },
   listaParcelas:   { display: "flex", flexDirection: "column", gap: 2, maxHeight: 300, overflowY: "auto", borderRadius: 8 },
   linhaParcela:    { display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 6, flexWrap: "wrap" },
-  parcelaNum:      { fontSize: 11, color: "#475569", minWidth: 28 },
+  parcelaNum:      { fontSize: 11, color: "#94a3b8", minWidth: 28 },
   parcelaData:     { fontSize: 12, color: "#94a3b8", minWidth: 80 },
   parcelaValor:    { fontSize: 12, fontWeight: 700, color: "#cbd5e1", flex: 1 },
   parcelaStatus:   { fontSize: 11, fontWeight: 600 },
@@ -426,10 +426,10 @@ const s = {
   modal:           { background: "#0f172a", border: "1px solid #1e293b", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 520, maxHeight: "90dvh", overflowY: "auto" },
   modalHeader:     { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 20px 0" },
   modalTitulo:     { fontSize: 18, fontWeight: 800 },
-  modalFechar:     { background: "none", border: "none", color: "#475569", fontSize: 18, cursor: "pointer" },
+  modalFechar:     { background: "none", border: "none", color: "#94a3b8", fontSize: 18, cursor: "pointer" },
   modalBody:       { padding: "20px", display: "flex", flexDirection: "column", gap: 14 },
   formField:       { display: "flex", flexDirection: "column", gap: 6 },
-  formLabel:       { fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 },
+  formLabel:       { fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
   formInput:       { background: "#1e293b", border: "1px solid #334155", borderRadius: 10, color: "#e2e8f0", padding: "12px 14px", fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" },
   btnSalvar:       { background: "#1d4ed8", border: "none", borderRadius: 12, color: "#fff", padding: "14px", fontSize: 15, fontWeight: 700, cursor: "pointer" },
   erro:            { color: "#ef4444", fontSize: 13, background: "#1a0a0a", borderRadius: 8, padding: "10px 14px" },
