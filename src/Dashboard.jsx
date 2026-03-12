@@ -65,10 +65,10 @@ function SecaoTipo({ tipo, itens }) {
           <span style={{ ...s.tipoTag, background: tipo.bg, color: tipo.cor }}>{tipo.label}</span>
         </div>
         <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: 13, color: "#475569", marginBottom: 2 }}>
-            {fmtBRL(totalReal)} <span style={{ color: "#334155" }}>/ {fmtBRL(totalPlan)}</span>
+          <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 2 }}>
+            {fmtBRL(totalReal)} <span style={{ color: "#7c8fa8" }}>/ {fmtBRL(totalPlan)}</span>
           </div>
-          <div style={{ fontSize: 11, color: acima ? "#ef4444" : "#475569" }}>
+          <div style={{ fontSize: 11, color: acima ? "#ef4444" : "#8faac0" }}>
             {pct(totalReal, totalPlan)}% do planejado
           </div>
         </div>
@@ -87,7 +87,7 @@ function SecaoTipo({ tipo, itens }) {
                 <span style={{ color: acimaItem ? "#ef4444" : "#e2e8f0", fontWeight: 600 }}>
                   {fmtBRL(r)}
                 </span>
-                <span style={{ color: "#334155" }}>/ {fmtBRL(p)}</span>
+                <span style={{ color: "#7c8fa8" }}>/ {fmtBRL(p)}</span>
               </div>
             </div>
             <BarraProgresso valor={r} max={p} cor={tipo.cor} />
@@ -206,7 +206,7 @@ const s = {
     flexWrap: "wrap", gap: 16,
   },
   topbarTitle: { fontSize: 22, fontWeight: 800, letterSpacing: -0.5 },
-  topbarSub:   { fontSize: 12, color: "#475569", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
+  topbarSub:   { fontSize: 12, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
   mesSelector: {
     display: "flex", alignItems: "center", gap: 4,
     background: "#0f172a", borderRadius: 10,
@@ -242,9 +242,9 @@ const s = {
     borderRadius: 16, padding: "16px 18px",
     display: "flex", flexDirection: "column", gap: 4,
   },
-  cardSaldoLabel: { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#475569" },
+  cardSaldoLabel: { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8" },
   cardSaldoValor: { fontWeight: 800, letterSpacing: -0.5, marginTop: 4 },
-  cardSaldoSub:   { fontSize: 12, color: "#334155", marginTop: 2 },
+  cardSaldoSub:   { fontSize: 12, color: "#7c8fa8", marginTop: 2 },
   secao: {
     background: "#0a1628", border: "1px solid #1e293b",
     borderRadius: 16, overflow: "hidden",
@@ -265,7 +265,7 @@ const s = {
     display: "flex", flexDirection: "column", gap: 8,
   },
   itemTopo: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-  itemNome: { fontSize: 14, color: "#94a3b8", fontWeight: 500 },
+  itemNome: { fontSize: 14, color: "#cbd5e1", fontWeight: 500 },
   itemValores: { display: "flex", alignItems: "baseline", gap: 6, fontSize: 13 },
   barraFundo: {
     width: "100%", height: 4, background: "#1e293b",
