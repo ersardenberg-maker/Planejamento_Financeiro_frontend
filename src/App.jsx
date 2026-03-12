@@ -75,12 +75,16 @@ const s = {
     height: 64, background: '#0a1120',
     borderTop: '1px solid #1e293b',
     display: 'flex', zIndex: 100,
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    scrollbarWidth: 'none',
   },
   navBtn: {
-    flex: 1, background: 'none', border: 'none',
+    flex: '0 0 auto', minWidth: 72, background: 'none', border: 'none',
     display: 'flex', flexDirection: 'column',
     alignItems: 'center', justifyContent: 'center', gap: 3,
     cursor: 'pointer', color: '#7c90a8', transition: 'color 0.15s',
+    padding: '0 8px',
   },
   navBtnAtivo: { color: '#7c3aed' },
   navIcon:     { fontSize: 17, lineHeight: 1 },
@@ -112,6 +116,7 @@ const s = {
 
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&display=swap');
+  nav::-webkit-scrollbar { display: none; }
   @media (min-width: 768px) {
     body > div > nav:nth-child(3) { display: none !important; }
     body > div > nav:nth-child(2) { display: flex !important; }
