@@ -80,11 +80,11 @@ const s = {
     flex: 1, background: 'none', border: 'none',
     display: 'flex', flexDirection: 'column',
     alignItems: 'center', justifyContent: 'center', gap: 3,
-    cursor: 'pointer', color: '#475569', transition: 'color 0.15s',
+    cursor: 'pointer', color: '#7c90a8', transition: 'color 0.15s',
   },
   navBtnAtivo: { color: '#7c3aed' },
-  navIcon:     { fontSize: 15, lineHeight: 1 },
-  navLabel:    { fontSize: 8, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 },
+  navIcon:     { fontSize: 17, lineHeight: 1 },
+  navLabel:    { fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 },
 
   navDesktop: {
     display: 'none',
@@ -103,7 +103,7 @@ const s = {
     background: 'none', border: 'none',
     display: 'flex', alignItems: 'center', gap: 12,
     padding: '10px 16px', borderRadius: 10,
-    cursor: 'pointer', color: '#475569', transition: 'all 0.15s',
+    cursor: 'pointer', color: '#7c90a8', transition: 'all 0.15s',
     textAlign: 'left',
   },
   navDesktopBtnAtivo: { background: '#130a2a', color: '#a78bfa' },
