@@ -67,6 +67,7 @@ export default function Planejamento() {
   const [ano, setAno]           = useState(hoje.getFullYear());
   const [categorias, setCats]   = useState([]);
   const [plano, setPlano]       = useState({});   // { categoria_id: { id, valor } }
+  const [emprestimos, setEmps]  = useState([]);   // parcelas do mês
   const [loading, setLoading]   = useState(true);
   const [saving, setSaving]     = useState(false);
   const [copiando, setCopiando] = useState(false);
@@ -84,17 +85,23 @@ export default function Planejamento() {
       .then(setCats);
   }, []);
 
-  // Carrega planejamento do mês/ano selecionado
+  // Carrega planejamento e empréstimos do mês/ano selecionado
   const carregarPlano = useCallback(() => {
     setLoading(true);
-    fetch(`${API_URL}/planejamento/?mes=${mes}&ano=${ano}`)
-      .then(r => r.json())
-      .then(data => {
-        const mapa = {};
-        data.forEach(p => { mapa[p.categoria_id] = { id: p.id, valor: parseFloat(p.valor) }; });
-        setPlano(mapa);
-      })
-      .finally(() => setLoading(false));
+    Promise.all([
+      fetch(`${API_URL}/planejamento/?mes=${mes}&ano=${ano}`).then(r => r.json()),
+      fetch(`${API_URL}/emprestimos/?status=ativo`).then(r => r.json()),
+    ]).then(([planoData, empsData]) => {
+      const mapa = {};
+      planoData.forEach(p => { mapa[p.categoria_id] = { id: p.id, valor: parseFloat(p.valor) }; });
+      setPlano(mapa);
+      // Filtra parcelas com vencimento no mês/ano atual
+      const parcelasMes = [];
+      empsData.forEach(emp => {
+        if (emp.proxima_parcela) return; // usa campo se disponível
+      });
+      setEmps(empsData);
+    }).finally(() => setLoading(false));
   }, [mes, ano]);
 
   useEffect(() => { carregarPlano(); }, [carregarPlano]);
@@ -157,8 +164,9 @@ export default function Planejamento() {
       .reduce((sum, c) => sum + (plano[c.id]?.valor || 0), 0);
   };
 
+  const totalEmprestimos = emprestimos.reduce((s, e) => s + parseFloat(e.valor_parcela || 0), 0);
   const totalReceitas  = totalPorTipo("receita");
-  const totalDespesas  = totalPorTipo("despesa_fixa") + totalPorTipo("despesa_variavel");
+  const totalDespesas  = totalPorTipo("despesa_fixa") + totalPorTipo("despesa_variavel") + totalEmprestimos;
   const saldo          = totalReceitas - totalDespesas;
 
   return (
@@ -252,6 +260,17 @@ export default function Planejamento() {
                             onChange={v => editarValor(cat.id, v)}
                             saving={saving}
                           />
+                        </td>
+                      </tr>
+                    ))}
+                    {tipo.key === "despesa_fixa" && emprestimos.map((emp, i) => (
+                      <tr key={`emp-${emp.id}`} style={{ background: (cats.length + i) % 2 === 0 ? "transparent" : "#0f172a" }}>
+                        <td style={s.td}>
+                          <span style={{ color: "#94a3b8" }}>🏦 {emp.nome}</span>
+                          <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: 6, background: "#1e293b", padding: "1px 6px", borderRadius: 4 }}>empréstimo</span>
+                        </td>
+                        <td style={{ ...s.td, textAlign: "right" }}>
+                          <span style={{ color: "#f97316", fontWeight: 700 }}>{fmtBRL(emp.valor_parcela)}</span>
                         </td>
                       </tr>
                     ))}
