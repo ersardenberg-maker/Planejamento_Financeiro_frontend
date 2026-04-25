@@ -28,11 +28,17 @@ function BadgeVencimento({ data }) {
   return <span style={{ ...s.badge, background: "#0c1a2e", color: "#94a3b8" }}>Vence em {dias}d</span>;
 }
 
-function ModalNovoEmprestimo({ onSalvar, onFechar }) {
+function ModalNovoEmprestimo({ emprestimo, onSalvar, onFechar }) {
   const [form, setForm] = useState({
-    nome: "", valor_total: "", valor_parcela: "", total_parcelas: "",
-    data_inicio: new Date().toISOString().slice(0,10),
-    dia_vencimento: "", credor: "", taxa_juros_mensal: "", observacao: "",
+    nome: emprestimo?.nome || "",
+    valor_total: emprestimo?.valor_total ? String(emprestimo.valor_total).replace(".", ",") : "",
+    valor_parcela: emprestimo?.valor_parcela ? String(emprestimo.valor_parcela).replace(".", ",") : "",
+    total_parcelas: emprestimo?.total_parcelas ? String(emprestimo.total_parcelas) : "",
+    data_inicio: emprestimo?.data_inicio || new Date().toISOString().slice(0,10),
+    dia_vencimento: emprestimo?.dia_vencimento ? String(emprestimo.dia_vencimento) : "",
+    credor: emprestimo?.credor || "",
+    taxa_juros_mensal: emprestimo?.taxa_juros_mensal ? String(parseFloat(emprestimo.taxa_juros_mensal) * 100).replace(".", ",") : "",
+    observacao: emprestimo?.observacao || "",
   });
   const [saving, setSaving] = useState(false);
   const [erro, setErro] = useState("");
@@ -65,7 +71,7 @@ function ModalNovoEmprestimo({ onSalvar, onFechar }) {
     <div style={s.overlay} onClick={onFechar}>
       <div style={s.modal} onClick={e => e.stopPropagation()}>
         <div style={s.modalHeader}>
-          <span style={s.modalTitulo}>Novo Empréstimo</span>
+          <span style={s.modalTitulo}>{emprestimo ? "Editar Emprestimo" : "Novo Emprestimo"}</span>
           <button style={s.modalFechar} onClick={onFechar}>✕</button>
         </div>
         <div style={s.modalBody}>
@@ -102,7 +108,7 @@ function ModalNovoEmprestimo({ onSalvar, onFechar }) {
           </div>
           {erro && <div style={s.erro}>{erro}</div>}
           <button style={s.btnSalvar} onClick={salvar} disabled={saving}>
-            {saving ? "Salvando..." : "Cadastrar Empréstimo"}
+            {saving ? "Salvando..." : emprestimo ? "Salvar alteracoes" : "Cadastrar Emprestimo"}
           </button>
         </div>
       </div>
@@ -110,7 +116,7 @@ function ModalNovoEmprestimo({ onSalvar, onFechar }) {
   );
 }
 
-function CardEmprestimo({ emp, onPagarParcela }) {
+function CardEmprestimo({ emp, excluindo, onEditar, onExcluir, onPagarParcela }) {
   const [expandido, setExpandido]   = useState(false);
   const [parcelas, setParcelas]     = useState([]);
   const [loadParcelas, setLoadParcelas] = useState(false);
@@ -147,6 +153,12 @@ function CardEmprestimo({ emp, onPagarParcela }) {
         <div>
           <div style={s.cardNome}>{emp.nome}</div>
           {emp.credor && <div style={s.cardCredor}>{emp.credor}</div>}
+          <div style={s.cardAcoes}>
+            <button style={s.btnAcaoCard} onClick={() => onEditar(emp)}>Editar</button>
+            <button style={s.btnAcaoPerigo} onClick={() => onExcluir(emp)} disabled={excluindo === emp.id}>
+              {excluindo === emp.id ? "..." : "Excluir"}
+            </button>
+          </div>
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={s.cardParcela}>{fmtBRL(emp.valor_parcela)}<span style={s.cardParcelaLabel}>/mês</span></div>
@@ -256,6 +268,8 @@ export default function Emprestimos() {
   const [emprestimos, setEmprestimos] = useState([]);
   const [loading, setLoading]         = useState(true);
   const [modalAberto, setModalAberto] = useState(false);
+  const [editando, setEditando]       = useState(null);
+  const [excluindo, setExcluindo]     = useState(null);
   const [filtro, setFiltro]           = useState("ativo");
 
   const carregar = useCallback(() => {
@@ -266,7 +280,6 @@ export default function Emprestimos() {
       .finally(() => setLoading(false));
   }, [filtro]);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { carregar(); }, [carregar]);
 
   async function criarEmprestimo(payload) {
@@ -278,6 +291,29 @@ export default function Emprestimos() {
     if (!res.ok) throw new Error();
     setModalAberto(false);
     carregar();
+  }
+
+  async function atualizarEmprestimo(id, payload) {
+    const res = await fetch(`${API_URL}/emprestimos/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error();
+    setEditando(null);
+    carregar();
+  }
+
+  async function excluirEmprestimo(emp) {
+    const confirmar = window.confirm(`Excluir o emprestimo "${emp.nome}" e suas parcelas?`);
+    if (!confirmar) return;
+    setExcluindo(emp.id);
+    try {
+      await fetch(`${API_URL}/emprestimos/${emp.id}`, { method: "DELETE" });
+      carregar();
+    } finally {
+      setExcluindo(null);
+    }
   }
 
   async function pagarParcela(emprestimoId, parcelaId) {
@@ -354,13 +390,27 @@ export default function Emprestimos() {
           </div>
         ) : (
           emprestimos.map(emp => (
-            <CardEmprestimo key={emp.id} emp={emp} onPagarParcela={pagarParcela} />
+            <CardEmprestimo
+              key={emp.id}
+              emp={emp}
+              excluindo={excluindo}
+              onEditar={setEditando}
+              onExcluir={excluirEmprestimo}
+              onPagarParcela={pagarParcela}
+            />
           ))
         )}
       </div>
 
       {modalAberto && (
         <ModalNovoEmprestimo onSalvar={criarEmprestimo} onFechar={() => setModalAberto(false)} />
+      )}
+      {editando && (
+        <ModalNovoEmprestimo
+          emprestimo={editando}
+          onSalvar={(payload) => atualizarEmprestimo(editando.id, payload)}
+          onFechar={() => setEditando(null)}
+        />
       )}
     </div>
   );
@@ -403,6 +453,9 @@ const s = {
   cardHeader:      { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 },
   cardNome:        { fontSize: 16, fontWeight: 800, color: "#e2e8f0" },
   cardCredor:      { fontSize: 12, color: "#94a3b8", marginTop: 2 },
+  cardAcoes:       { display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" },
+  btnAcaoCard:     { background: "#1e293b", border: "1px solid #334155", borderRadius: 8, color: "#cbd5e1", padding: "6px 10px", fontSize: 12, cursor: "pointer" },
+  btnAcaoPerigo:   { background: "#1a0a0a", border: "1px solid #7f1d1d", borderRadius: 8, color: "#fca5a5", padding: "6px 10px", fontSize: 12, cursor: "pointer" },
   cardParcela:     { fontSize: 20, fontWeight: 800, color: "#3b82f6", textAlign: "right" },
   cardParcelaLabel:{ fontSize: 11, color: "#94a3b8", fontWeight: 400 },
   badge:           { display: "inline-block", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, marginTop: 4 },
