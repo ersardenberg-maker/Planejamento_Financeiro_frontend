@@ -266,6 +266,7 @@ export default function Emprestimos() {
       .finally(() => setLoading(false));
   }, [filtro]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { carregar(); }, [carregar]);
 
   async function criarEmprestimo(payload) {

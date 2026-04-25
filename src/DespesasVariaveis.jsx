@@ -84,6 +84,7 @@ export default function DespesasVariaveis() {
       .finally(() => setLoading(false));
   }, [mes, ano]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { carregar(); }, [carregar]);
 
   const totalPlan = itens.reduce((s, i) => s + (parseFloat(i.planejado) || 0), 0);

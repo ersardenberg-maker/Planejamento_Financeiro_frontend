@@ -117,9 +117,24 @@ export default function Dashboard() {
     }).finally(() => setLoading(false));
   }, [mes, ano]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { carregar(); }, [carregar]);
 
   const itensPorTipo = (tipo) => resumo.filter(r => r.tipo === tipo);
+  const variaveis = itensPorTipo("despesa_variavel");
+  const totalVariavelPlan = variaveis.reduce((s, i) => s + parseFloat(i.planejado || 0), 0);
+  const totalVariavelReal = variaveis.reduce((s, i) => s + parseFloat(i.realizado || 0), 0);
+  const restanteVariavel = totalVariavelPlan - totalVariavelReal;
+  const hojeMesAtual = hoje.getMonth() + 1 === mes && hoje.getFullYear() === ano;
+  const ultimoDiaMes = new Date(ano, mes, 0).getDate();
+  const diasRestantes = hojeMesAtual ? Math.max(ultimoDiaMes - hoje.getDate() + 1, 1) : ultimoDiaMes;
+  const limiteDiario = restanteVariavel > 0 ? restanteVariavel / diasRestantes : 0;
+  const categoriasEstouradas = resumo.filter(i => i.tipo !== "receita" && parseFloat(i.realizado) > parseFloat(i.planejado) && parseFloat(i.planejado) > 0);
+  const categoriasAtencao = resumo.filter(i => {
+    const planejado = parseFloat(i.planejado);
+    const realizado = parseFloat(i.realizado);
+    return i.tipo !== "receita" && planejado > 0 && realizado <= planejado && realizado / planejado >= 0.8;
+  });
 
   const mesAnterior = () => {
     if (mes === 1) { setMes(12); setAno(a => a - 1); }
@@ -161,6 +176,25 @@ export default function Dashboard() {
               <CardSaldo label="Receitas Realizadas"  valor={saldo.total_receitas}      sub={`Planejado: ${fmtBRL(saldo.total_receitas_plan)}`} />
               <CardSaldo label="Despesas Realizadas"  valor={saldo.total_despesas}      sub={`Planejado: ${fmtBRL(saldo.total_despesas_plan)}`} />
               <CardSaldo label="Saldo do Mês"         valor={saldo.saldo_realizado}     sub={`Planejado: ${fmtBRL(saldo.saldo_planejado)}`} destaque />
+            </div>
+          )}
+
+          {resumo.length > 0 && (
+            <div style={s.insights}>
+              <div style={s.insightItem}>
+                <span style={s.insightLabel}>Variavel restante</span>
+                <strong style={{ ...s.insightValor, color: restanteVariavel >= 0 ? "#22c55e" : "#ef4444" }}>{fmtBRL(restanteVariavel)}</strong>
+              </div>
+              <div style={s.insightItem}>
+                <span style={s.insightLabel}>Limite por dia</span>
+                <strong style={s.insightValor}>{fmtBRL(limiteDiario)}</strong>
+                <span style={s.insightSub}>{diasRestantes} dia(s) no periodo</span>
+              </div>
+              <div style={s.insightItem}>
+                <span style={s.insightLabel}>Alertas</span>
+                <strong style={s.insightValor}>{categoriasEstouradas.length} estouro(s)</strong>
+                <span style={s.insightSub}>{categoriasAtencao.length} em atencao</span>
+              </div>
             </div>
           )}
 
@@ -247,6 +281,20 @@ const s = {
   cardSaldoLabel: { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8" },
   cardSaldoValor: { fontWeight: 800, letterSpacing: -0.5, marginTop: 4, wordBreak: 'break-all', lineHeight: 1.2 },
   cardSaldoSub:   { fontSize: 12, color: "#7c8fa8", marginTop: 2 },
+  insights: {
+    background: "#0a1628", border: "1px solid #1e293b",
+    borderRadius: 16, padding: 16,
+    display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+    gap: 12,
+  },
+  insightItem: {
+    background: "#0f172a", border: "1px solid #1e293b",
+    borderRadius: 12, padding: 14,
+    display: "flex", flexDirection: "column", gap: 4,
+  },
+  insightLabel: { fontSize: 11, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1 },
+  insightValor: { fontSize: 18, color: "#e2e8f0" },
+  insightSub: { fontSize: 12, color: "#7c8fa8" },
   secao: {
     background: "#0a1628", border: "1px solid #1e293b",
     borderRadius: 16, overflow: "hidden",

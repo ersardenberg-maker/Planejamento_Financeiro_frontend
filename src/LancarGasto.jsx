@@ -72,12 +72,31 @@ export default function LancarGasto() {
   const valorFloat  = parseFloat((form.valor || "0").replace(/\D/g, "")) / 100;
   const catsDaAba   = categorias.filter(c => c.tipo === abaAtiva);
   const tipoAtivo   = TIPOS.find(t => t.key === abaAtiva);
+  const cartaoSelecionado = cartoes.find(c => c.id === form.cartao_id);
+
+  function calcularFaturaCartao() {
+    if (!cartaoSelecionado?.dia_fechamento) {
+      return { mes: Number(form.mes_fatura), ano: Number(form.ano_fatura) };
+    }
+    const [anoCompra, mesCompra, diaCompra] = form.data.split("-").map(Number);
+    let mesFatura = mesCompra;
+    let anoFatura = anoCompra;
+    if (diaCompra > cartaoSelecionado.dia_fechamento) {
+      mesFatura += 1;
+      if (mesFatura > 12) {
+        mesFatura = 1;
+        anoFatura += 1;
+      }
+    }
+    return { mes: mesFatura, ano: anoFatura };
+  }
 
   function gerarParcelas() {
     const n = parseInt(form.num_parcelas) || 1;
     const valorParcela = parseFloat((valorFloat / n).toFixed(2));
-    let m = parseInt(form.mes_fatura, 10);
-    let a = parseInt(form.ano_fatura, 10);
+    const fatura = calcularFaturaCartao();
+    let m = fatura.mes;
+    let a = fatura.ano;
     const parcelas = [];
     for (let i = 0; i < n; i++) {
       parcelas.push({ mes: m, ano: a, valor: valorParcela, num: i + 1, total: n });
@@ -113,6 +132,7 @@ export default function LancarGasto() {
           if (!res.ok) throw new Error();
         }
       } else {
+        const fatura = form.meio_pagamento === "cartao" ? calcularFaturaCartao() : null;
         const res = await fetch(`${API_URL}/lancamentos/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -123,8 +143,8 @@ export default function LancarGasto() {
             data:           form.data,
             meio_pagamento: form.meio_pagamento,
             cartao_id:      form.meio_pagamento === "cartao" ? form.cartao_id : null,
-            mes_fatura:     form.meio_pagamento === "cartao" ? Number(form.mes_fatura) : null,
-            ano_fatura:     form.meio_pagamento === "cartao" ? Number(form.ano_fatura) : null,
+            mes_fatura:     fatura?.mes ?? null,
+            ano_fatura:     fatura?.ano ?? null,
           }),
         });
         if (!res.ok) throw new Error(await res.text());

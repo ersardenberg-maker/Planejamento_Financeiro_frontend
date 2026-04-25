@@ -67,7 +67,7 @@ export default function Planejamento() {
   const [ano, setAno]           = useState(hoje.getFullYear());
   const [categorias, setCats]   = useState([]);
   const [plano, setPlano]       = useState({});   // { categoria_id: { id, valor } }
-  const [emprestimos, setEmps]  = useState([]);   // parcelas do mês
+  const [parcelasEmprestimos, setParcelasEmprestimos] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [saving, setSaving]     = useState(false);
   const [copiando, setCopiando] = useState(false);
@@ -90,17 +90,12 @@ export default function Planejamento() {
     setLoading(true);
     Promise.all([
       fetch(`${API_URL}/planejamento/?mes=${mes}&ano=${ano}`).then(r => r.json()),
-      fetch(`${API_URL}/emprestimos/?status=ativo`).then(r => r.json()),
-    ]).then(([planoData, empsData]) => {
+      fetch(`${API_URL}/emprestimos/parcelas?mes=${mes}&ano=${ano}`).then(r => r.json()),
+    ]).then(([planoData, parcelasData]) => {
       const mapa = {};
       planoData.forEach(p => { mapa[p.categoria_id] = { id: p.id, valor: parseFloat(p.valor) }; });
       setPlano(mapa);
-      // Filtra parcelas com vencimento no mês/ano atual
-      const parcelasMes = [];
-      empsData.forEach(emp => {
-        if (emp.proxima_parcela) return; // usa campo se disponível
-      });
-      setEmps(empsData);
+      setParcelasEmprestimos(parcelasData.filter(p => p.status !== "paga"));
     }).finally(() => setLoading(false));
   }, [mes, ano]);
 
@@ -164,7 +159,7 @@ export default function Planejamento() {
       .reduce((sum, c) => sum + (plano[c.id]?.valor || 0), 0);
   };
 
-  const totalEmprestimos = emprestimos.reduce((s, e) => s + parseFloat(e.valor_parcela || 0), 0);
+  const totalEmprestimos = parcelasEmprestimos.reduce((s, p) => s + parseFloat(p.valor_previsto || 0), 0);
   const totalReceitas  = totalPorTipo("receita");
   const totalDespesas  = totalPorTipo("despesa_fixa") + totalPorTipo("despesa_variavel") + totalEmprestimos;
   const saldo          = totalReceitas - totalDespesas;
@@ -263,14 +258,14 @@ export default function Planejamento() {
                         </td>
                       </tr>
                     ))}
-                    {tipo.key === "despesa_fixa" && emprestimos.map((emp, i) => (
-                      <tr key={`emp-${emp.id}`} style={{ background: (cats.length + i) % 2 === 0 ? "transparent" : "#0f172a" }}>
+                    {tipo.key === "despesa_fixa" && parcelasEmprestimos.map((parcela, i) => (
+                      <tr key={`emp-${parcela.id}`} style={{ background: (cats.length + i) % 2 === 0 ? "transparent" : "#0f172a" }}>
                         <td style={s.td}>
-                          <span style={{ color: "#94a3b8" }}>🏦 {emp.nome}</span>
-                          <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: 6, background: "#1e293b", padding: "1px 6px", borderRadius: 4 }}>empréstimo</span>
+                          <span style={{ color: "#94a3b8" }}>{parcela.emprestimo?.nome || "Emprestimo"} #{parcela.numero_parcela}</span>
+                          <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: 6, background: "#1e293b", padding: "1px 6px", borderRadius: 4 }}>emprestimo</span>
                         </td>
                         <td style={{ ...s.td, textAlign: "right" }}>
-                          <span style={{ color: "#f97316", fontWeight: 700 }}>{fmtBRL(emp.valor_parcela)}</span>
+                          <span style={{ color: "#f97316", fontWeight: 700 }}>{fmtBRL(parcela.valor_previsto)}</span>
                         </td>
                       </tr>
                     ))}

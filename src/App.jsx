@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import LancarGasto from './LancarGasto'
 import Planejamento from './Planejamento'
 import Dashboard from './Dashboard'
@@ -6,19 +6,67 @@ import DespesasVariaveis from './DespesasVariaveis'
 import Emprestimos from './Emprestimos'
 import CartaoCredito from './CartaoCredito'
 import Cadastros from './Cadastros'
+import Extrato from './Extrato'
+import Recorrencias from './Recorrencias'
 
 const TELAS = [
-  { key: 'dashboard',          label: 'Dashboard',    icon: '📊' },
-  { key: 'lancar',             label: 'Lançar',       icon: '＋' },
-  { key: 'cartao',             label: 'Cartão',       icon: '💳' },
-  { key: 'despesas-variaveis', label: 'Variáveis',    icon: '📈' },
-  { key: 'emprestimos',        label: 'Empréstimos',  icon: '🏦' },
-  { key: 'planejamento',       label: 'Planejamento', icon: '📅' },
-  { key: 'cadastros',           label: 'Cadastros',    icon: '⚙️' },
+  { key: 'dashboard',          label: 'Dashboard',    icon: 'D' },
+  { key: 'lancar',             label: 'Lancar',       icon: '+' },
+  { key: 'cartao',             label: 'Cartao',       icon: '$' },
+  { key: 'extrato',            label: 'Extrato',      icon: 'X' },
+  { key: 'despesas-variaveis', label: 'Variaveis',    icon: '%' },
+  { key: 'emprestimos',        label: 'Emprestimos',  icon: 'E' },
+  { key: 'recorrencias',       label: 'Recorrencias', icon: 'R' },
+  { key: 'planejamento',       label: 'Planejamento', icon: 'P' },
+  { key: 'cadastros',          label: 'Cadastros',    icon: '*' },
 ]
 
 export default function App() {
   const [tela, setTela] = useState('dashboard')
+
+  useEffect(() => {
+    const corrigir = (texto) => texto
+      .replaceAll('ÃƒÂ§', 'ç')
+      .replaceAll('ÃƒÂ£', 'ã')
+      .replaceAll('ÃƒÂ¡', 'á')
+      .replaceAll('ÃƒÂ©', 'é')
+      .replaceAll('ÃƒÂª', 'ê')
+      .replaceAll('ÃƒÂ­', 'í')
+      .replaceAll('ÃƒÂ³', 'ó')
+      .replaceAll('ÃƒÂº', 'ú')
+      .replaceAll('ÃƒÂµ', 'õ')
+      .replaceAll('ÃƒÂ´', 'ô')
+      .replaceAll('Ãƒ', 'í')
+      .replaceAll('Ã‚Âº', 'º')
+      .replaceAll('Ã‚Âª', 'ª')
+      .replaceAll('Ã¢â‚¬â€', '-')
+      .replaceAll('Ã¢â‚¬Â¹', '<')
+      .replaceAll('Ã¢â‚¬Âº', '>')
+      .replaceAll('Ã¢â€ Â©', '<-')
+      .replaceAll('Ã¢â€ â€™', '->')
+      .replaceAll('Ã¢Å“â€œ', 'OK')
+      .replaceAll('Ã¢Å“â€¢', 'x')
+      .replaceAll('Ã¢Å“ÂÃ¯Â¸Â', 'Editar')
+      .replaceAll('Ã°Å¸â€™Â³', '')
+      .replaceAll('Ã°Å¸â€œÅ ', '')
+      .replaceAll('Ã°Å¸â€œË†', '')
+      .replaceAll('Ã°Å¸ÂÂ¦', '')
+      .replaceAll('Ã°Å¸â€œâ€¦', '')
+      .replaceAll('Ã°Å¸Å¡Â«', 'Inativar')
+      .replaceAll('Ã°Å¸â€Â´', '')
+      .replaceAll('Ã°Å¸Å¸Â¡', '')
+      .replaceAll('Ã°Å¸Å¸Â¢', '')
+      .replaceAll('Ã¢Å¡Â¡', '')
+      .replaceAll('Ã¢Å¡Â ', '')
+
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+    const nodes = []
+    while (walker.nextNode()) nodes.push(walker.currentNode)
+    nodes.forEach(node => {
+      const novo = corrigir(node.nodeValue)
+      if (novo !== node.nodeValue) node.nodeValue = novo
+    })
+  }, [tela])
 
   return (
     <div style={s.root}>
@@ -28,13 +76,14 @@ export default function App() {
         {tela === 'dashboard'          && <Dashboard />}
         {tela === 'lancar'             && <LancarGasto />}
         {tela === 'cartao'             && <CartaoCredito />}
+        {tela === 'extrato'            && <Extrato />}
         {tela === 'despesas-variaveis' && <DespesasVariaveis />}
         {tela === 'emprestimos'        && <Emprestimos />}
+        {tela === 'recorrencias'       && <Recorrencias />}
         {tela === 'planejamento'       && <Planejamento />}
-        {tela === 'cadastros'           && <Cadastros />}
+        {tela === 'cadastros'          && <Cadastros />}
       </div>
 
-      {/* Nav inferior — mobile */}
       <nav style={s.navMobile}>
         {TELAS.map(t => (
           <button
@@ -48,9 +97,8 @@ export default function App() {
         ))}
       </nav>
 
-      {/* Nav lateral — desktop */}
       <nav style={s.navDesktop}>
-        <div style={s.navDesktopLogo}>FF</div>
+        <div style={s.navDesktopLogo}>PF</div>
         {TELAS.map(t => (
           <button
             key={t.key}
@@ -87,7 +135,7 @@ const s = {
     padding: '0 8px',
   },
   navBtnAtivo: { color: '#7c3aed' },
-  navIcon:     { fontSize: 17, lineHeight: 1 },
+  navIcon:     { fontSize: 17, lineHeight: 1, fontWeight: 900 },
   navLabel:    { fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 },
 
   navDesktop: {

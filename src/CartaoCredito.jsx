@@ -28,13 +28,32 @@ function ModalNovoLancamento({ cartoes, categorias, mes, ano, onSalvar, onFechar
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   // Gera lista de parcelas para preview
+  function calcularFaturaCartao() {
+    const cartao = cartoes.find(c => c.id === form.cartao_id);
+    if (!cartao?.dia_fechamento) {
+      return { mes: parseInt(form.mes_fatura), ano: parseInt(form.ano_fatura) };
+    }
+    const [anoCompra, mesCompra, diaCompra] = form.data.split("-").map(Number);
+    let mesFatura = mesCompra;
+    let anoFatura = anoCompra;
+    if (diaCompra > cartao.dia_fechamento) {
+      mesFatura += 1;
+      if (mesFatura > 12) {
+        mesFatura = 1;
+        anoFatura += 1;
+      }
+    }
+    return { mes: mesFatura, ano: anoFatura };
+  }
+
   function gerarParcelas() {
     const total    = parseFloat(form.valor.replace(",",".")) || 0;
     const n        = parseInt(form.num_parcelas) || 1;
     const valorParcela = parseFloat((total / n).toFixed(2));
     const parcelas = [];
-    let m = parseInt(form.mes_fatura);
-    let a = parseInt(form.ano_fatura);
+    const fatura = calcularFaturaCartao();
+    let m = fatura.mes;
+    let a = fatura.ano;
     for (let i = 0; i < n; i++) {
       parcelas.push({ mes: m, ano: a, valor: valorParcela, num: i + 1 });
       m++;
@@ -65,6 +84,7 @@ function ModalNovoLancamento({ cartoes, categorias, mes, ano, onSalvar, onFechar
           });
         }
       } else {
+        const fatura = calcularFaturaCartao();
         await onSalvar({
           descricao:      form.descricao,
           valor:          parseFloat(form.valor.replace(",",".")),
@@ -72,8 +92,8 @@ function ModalNovoLancamento({ cartoes, categorias, mes, ano, onSalvar, onFechar
           cartao_id:      form.cartao_id,
           data:           form.data,
           meio_pagamento: "cartao",
-          mes_fatura:     parseInt(form.mes_fatura),
-          ano_fatura:     parseInt(form.ano_fatura),
+          mes_fatura:     fatura.mes,
+          ano_fatura:     fatura.ano,
         });
       }
     } catch { setErro("Erro ao salvar."); }
@@ -194,8 +214,7 @@ function ModalNovoLancamento({ cartoes, categorias, mes, ano, onSalvar, onFechar
 }
 
 // ── Modal: Importar CSV ──────────────────────────────────────────
-function ModalImportar({ cartoes, categorias, mes, ano, onSalvar, onFechar }) {
-  const [arquivo, setArquivo]       = useState(null);
+function ModalImportar({ cartoes, categorias, mes, ano, existentes = [], onSalvar, onFechar }) {
   const [preview, setPreview]       = useState([]);
   const [colunas, setColunas]       = useState([]);
   const [colDesc, setColDesc]       = useState("");
@@ -230,7 +249,6 @@ function ModalImportar({ cartoes, categorias, mes, ano, onSalvar, onFechar }) {
   function handleArquivo(e) {
     const file = e.target.files[0];
     if (!file) return;
-    setArquivo(file);
     const reader = new FileReader();
     reader.onload = ev => processarCSV(ev.target.result);
     reader.readAsText(file, "latin1");
@@ -238,13 +256,21 @@ function ModalImportar({ cartoes, categorias, mes, ano, onSalvar, onFechar }) {
 
   function mapearLinhas() {
     if (!colDesc || !colVal) { setErro("Selecione as colunas."); return; }
+    const regras = JSON.parse(localStorage.getItem("regras_categorias_csv") || "{}");
     const mapeadas = linhas
       .map(l => {
         const desc = l[colDesc];
         const valStr = (l[colVal] || "").replace(/\./g,"").replace(",",".");
         const val = Math.abs(parseFloat(valStr));
         if (!desc || isNaN(val) || val <= 0) return null;
-        return { descricao: desc, valor: val, categoria_id: categorias[0]?.id || "", cartao_id: cartaoId };
+        const chaveRegra = Object.keys(regras).find(k => desc.toLowerCase().includes(k));
+        const categoriaRegra = chaveRegra ? regras[chaveRegra] : "";
+        const duplicado = existentes.some(e =>
+          (e.descricao || "").trim().toLowerCase() === desc.trim().toLowerCase() &&
+          Math.abs(parseFloat(e.valor || 0) - val) < 0.01
+        );
+        if (duplicado) return null;
+        return { descricao: desc, valor: val, categoria_id: categoriaRegra || categorias[0]?.id || "", cartao_id: cartaoId };
       })
       .filter(Boolean);
     setLinhas(mapeadas);
@@ -255,7 +281,10 @@ function ModalImportar({ cartoes, categorias, mes, ano, onSalvar, onFechar }) {
   async function salvarTudo() {
     setSaving(true);
     try {
+      const regras = JSON.parse(localStorage.getItem("regras_categorias_csv") || "{}");
       for (const l of linhas) {
+        const chave = l.descricao.trim().toLowerCase().slice(0, 32);
+        if (chave && l.categoria_id) regras[chave] = l.categoria_id;
         await onSalvar({
           ...l,
           data: new Date().toISOString().slice(0,10),
@@ -264,6 +293,7 @@ function ModalImportar({ cartoes, categorias, mes, ano, onSalvar, onFechar }) {
           ano_fatura: parseInt(anoFatura),
         });
       }
+      localStorage.setItem("regras_categorias_csv", JSON.stringify(regras));
       onFechar();
     } catch { setErro("Erro ao salvar alguns lançamentos."); }
     finally  { setSaving(false); }
@@ -416,6 +446,7 @@ export default function CartaoCredito() {
       .finally(() => setLoading(false));
   }, [mes, ano]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { carregarLancamentos(); }, [carregarLancamentos]);
 
   async function criarLancamento(payload) {
@@ -590,6 +621,7 @@ export default function CartaoCredito() {
       {modalImport && (
         <ModalImportar
           cartoes={cartoes} categorias={categorias}
+          existentes={lancamentos}
           mes={mes} ano={ano}
           onSalvar={criarLancamento} onFechar={() => setModalImport(false)}
         />
