@@ -12,9 +12,9 @@ const MEIOS = [
 ];
 
 const TIPOS = [
-  { key: "receita",          label: "Receitas",   cor: "#22c55e", corFundo: "#052e16" },
-  { key: "despesa_fixa",     label: "Fixas",      cor: "#f97316", corFundo: "#1c0a00" },
-  { key: "despesa_variavel", label: "Variáveis",  cor: "#3b82f6", corFundo: "#0c1a2e" },
+  { key: "receita",          label: "Receitas",   cor: "#22c55e", corFundo: "rgba(16,185,129,0.08)" },
+  { key: "despesa_fixa",     label: "Fixas",      cor: "#f97316", corFundo: "rgba(249,115,22,0.08)" },
+  { key: "despesa_variavel", label: "Variáveis",  cor: "#3b82f6", corFundo: "rgba(59,130,246,0.08)" },
 ];
 
 function fmt(value) {
@@ -201,9 +201,9 @@ export default function LancarGasto() {
               key={t.key}
               style={{
                 ...s.aba,
-                color:        abaAtiva === t.key ? t.cor : "#8899aa",
+                color:        abaAtiva === t.key ? t.cor : "#6b7280",
                 borderBottom: abaAtiva === t.key ? `2px solid ${t.cor}` : "2px solid transparent",
-                background:   abaAtiva === t.key ? t.corFundo + "88" : "transparent",
+                background:   abaAtiva === t.key ? t.corFundo : "transparent",
               }}
               onClick={() => trocarAba(t.key)}
             >
@@ -217,16 +217,16 @@ export default function LancarGasto() {
           <label style={s.label}>Categoria</label>
           <div style={s.catGrid}>
             {catsDaAba.length === 0 && (
-              <span style={{ color:"#94a3b8", fontSize:13 }}>Nenhuma categoria cadastrada.</span>
+              <span style={{ color:"#9ca3af", fontSize:13 }}>Nenhuma categoria cadastrada.</span>
             )}
             {catsDaAba.map(c => (
               <button
                 key={c.id}
                 style={{
                   ...s.catBtn,
-                  background: form.categoria_id === c.id ? tipoAtivo.cor : "#1e1e2e",
-                  color:      form.categoria_id === c.id ? "#fff" : "#94a3b8",
-                  border:     `1px solid ${form.categoria_id === c.id ? tipoAtivo.cor : "#2a2a3e"}`,
+                  background: form.categoria_id === c.id ? tipoAtivo.cor : "#1a1f2e",
+                  color:      form.categoria_id === c.id ? "#fff" : "#9ca3af",
+                  border:     `1px solid ${form.categoria_id === c.id ? tipoAtivo.cor : "#2a2f3e"}`,
                   transform:  form.categoria_id === c.id ? "scale(1.04)" : "scale(1)",
                 }}
                 onClick={() => set("categoria_id", c.id)}
@@ -246,9 +246,9 @@ export default function LancarGasto() {
                 key={m.value}
                 style={{
                   ...s.meioBtn,
-                  background: form.meio_pagamento === m.value ? "#7c3aed" : "#1e1e2e",
-                  color:      form.meio_pagamento === m.value ? "#fff" : "#666",
-                  border:     `1px solid ${form.meio_pagamento === m.value ? "#7c3aed" : "#2a2a3e"}`,
+                  background: form.meio_pagamento === m.value ? "rgba(16,185,129,0.15)" : "#1a1f2e",
+                  color:      form.meio_pagamento === m.value ? "#10b981" : "#6b7280",
+                  border:     `1px solid ${form.meio_pagamento === m.value ? "rgba(16,185,129,0.3)" : "#2a2f3e"}`,
                 }}
                 onClick={() => set("meio_pagamento", m.value)}
               >
@@ -275,7 +275,12 @@ export default function LancarGasto() {
             <div style={s.toggleRow}>
               <span style={s.toggleLabel}>Compra parcelada?</span>
               <button
-                style={{ ...s.toggleBtn, background: form.parcelado ? "#7c3aed" : "#1e1e2e", color: form.parcelado ? "#fff" : "#94a3b8" }}
+                style={{
+                  ...s.toggleBtn,
+                  background: form.parcelado ? "rgba(16,185,129,0.15)" : "#1a1f2e",
+                  border:     `1px solid ${form.parcelado ? "rgba(16,185,129,0.3)" : "#2a2f3e"}`,
+                  color:      form.parcelado ? "#10b981" : "#6b7280",
+                }}
                 onClick={() => set("parcelado", !form.parcelado)}
               >
                 {form.parcelado ? "Sim" : "Não"}
@@ -293,9 +298,9 @@ export default function LancarGasto() {
                   key={n}
                   style={{
                     ...s.parcelaOpcao,
-                    background: form.num_parcelas === String(n) ? "#7c3aed" : "#1e1e2e",
-                    color:      form.num_parcelas === String(n) ? "#fff" : "#94a3b8",
-                    border:     `1px solid ${form.num_parcelas === String(n) ? "#7c3aed" : "#2a2a3e"}`,
+                    background: form.num_parcelas === String(n) ? "rgba(16,185,129,0.15)" : "#1a1f2e",
+                    color:      form.num_parcelas === String(n) ? "#10b981" : "#9ca3af",
+                    border:     `1px solid ${form.num_parcelas === String(n) ? "rgba(16,185,129,0.3)" : "#2a2f3e"}`,
                   }}
                   onClick={() => set("num_parcelas", String(n))}
                 >
@@ -306,7 +311,7 @@ export default function LancarGasto() {
             {/* Preview parcelas */}
             {valorFloat > 0 && (
               <div style={s.previewParcelas}>
-                <div style={{ padding:"8px 12px", borderBottom:"1px solid #1e1e2e", fontSize:11, color:"#94a3b8" }}>
+                <div style={{ padding:"8px 12px", borderBottom:"1px solid #2a2f3e", fontSize:11, color:"#9ca3af" }}>
                   {form.num_parcelas}x de R$ {(valorFloat / parseInt(form.num_parcelas)).toFixed(2).replace(".",",")}
                 </div>
                 <div style={{ maxHeight:120, overflowY:"auto" }}>
@@ -349,7 +354,7 @@ export default function LancarGasto() {
 
         {/* Descrição */}
         <div style={s.field}>
-          <label style={s.label}>Descrição <span style={{ color:"#7c8fa8" }}>(opcional)</span></label>
+          <label style={s.label}>Descrição <span style={{ color:"#6b7280" }}>(opcional)</span></label>
           <input
             style={s.input}
             placeholder="Ex: Mercado, Uber, Netflix..."
@@ -367,7 +372,7 @@ export default function LancarGasto() {
         {error && <div style={s.error}>{error}</div>}
 
         <button
-          style={{ ...s.btn, background: tipoAtivo.cor, ...(saving ? s.btnDisabled : {}) }}
+          style={{ ...s.btn, ...(saving ? s.btnDisabled : {}) }}
           onClick={salvar}
           disabled={saving}
           className="btn-salvar"
@@ -388,38 +393,38 @@ export default function LancarGasto() {
 
 const s = {
   screen: {
-    minHeight:"100dvh", background:"#0d0d1a",
+    minHeight:"100dvh", background:"#0f1419",
     display:"flex", flexDirection:"column", alignItems:"center",
-    fontFamily:"'DM Sans', sans-serif", paddingBottom:40,
+    fontFamily:"system-ui, -apple-system, sans-serif", paddingBottom:40,
   },
   loader:    { display:"flex", alignItems:"center", justifyContent:"center", height:"100dvh" },
-  loaderDot: { width:12, height:12, borderRadius:"50%", background:"#7c3aed", animation:"pulse 1s infinite" },
+  loaderDot: { width:12, height:12, borderRadius:"50%", background:"#10b981", animation:"pulse 1s infinite" },
   header: {
     width:"100%", maxWidth:480,
     display:"flex", justifyContent:"space-between", alignItems:"center",
     padding:"20px 24px 0", boxSizing:"border-box",
   },
-  headerLabel: { color:"#7c3aed", fontWeight:700, fontSize:15, letterSpacing:1, textTransform:"uppercase" },
-  headerDate:  { color:"#94a3b8", fontSize:13 },
+  headerLabel: { color:"#10b981", fontWeight:700, fontSize:15, letterSpacing:1, textTransform:"uppercase" },
+  headerDate:  { color:"#9ca3af", fontSize:13 },
   valorBlock: {
     display:"flex", alignItems:"baseline", gap:8,
     padding:"32px 24px 16px",
     width:"100%", maxWidth:480, boxSizing:"border-box",
   },
-  cifrao:     { color:"#7c3aed", fontSize:28, fontWeight:700 },
+  cifrao:     { color:"#10b981", fontSize:28, fontWeight:700 },
   valorInput: {
     background:"transparent", border:"none", outline:"none",
     color:"#fff", fontSize:52, fontWeight:800, width:"100%",
-    fontFamily:"'DM Sans', sans-serif", letterSpacing:-2,
+    fontFamily:"system-ui, -apple-system, sans-serif", letterSpacing:-2,
   },
   card: {
     width:"100%", maxWidth:480,
-    background:"#13131f", borderRadius:20,
+    background:"#1a1f2e", borderRadius:24,
     padding:"0 0 24px", boxSizing:"border-box", margin:"0 12px",
     display:"flex", flexDirection:"column", gap:20,
-    border:"1px solid #1e1e2e", overflow:"hidden",
+    border:"1px solid #2a2f3e", overflow:"hidden",
   },
-  abas: { display:"flex", borderBottom:"1px solid #1e1e2e" },
+  abas: { display:"flex", borderBottom:"1px solid #2a2f3e" },
   aba: {
     flex:1, padding:"14px 8px",
     background:"transparent", border:"none", borderBottom:"2px solid transparent",
@@ -427,7 +432,7 @@ const s = {
     textTransform:"uppercase", letterSpacing:0.8, transition:"all 0.15s",
   },
   field:  { display:"flex", flexDirection:"column", gap:8, padding:"0 20px" },
-  label:  { color:"#94a3b8", fontSize:12, fontWeight:600, textTransform:"uppercase", letterSpacing:1 },
+  label:  { color:"#9ca3af", fontSize:12, fontWeight:600, textTransform:"uppercase", letterSpacing:1 },
   catGrid: { display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(90px, 1fr))", gap:8 },
   catBtn: { padding:"10px 8px", borderRadius:10, cursor:"pointer", fontSize:13, fontWeight:600, transition:"all 0.15s", lineHeight:1.3 },
   meioRow: { display:"flex", gap:6, flexWrap:"wrap" },
@@ -437,28 +442,30 @@ const s = {
     fontSize:16, minWidth:52, transition:"all 0.15s",
   },
   input: {
-    background:"#1e1e2e", border:"1px solid #2a2a3e", borderRadius:10,
-    color:"#ccc", padding:"12px 14px", fontSize:14, outline:"none",
-    width:"100%", boxSizing:"border-box", fontFamily:"'DM Sans', sans-serif",
+    background:"#0f1419", border:"1px solid #2a2f3e", borderRadius:12,
+    color:"#d1d5db", padding:"12px 14px", fontSize:14, outline:"none",
+    width:"100%", boxSizing:"border-box", fontFamily:"system-ui, -apple-system, sans-serif",
   },
   btn: {
     color:"#fff", border:"none", borderRadius:14, padding:"16px",
     fontSize:16, fontWeight:700, cursor:"pointer",
     width:"calc(100% - 40px)", margin:"0 20px",
-    fontFamily:"'DM Sans', sans-serif", letterSpacing:0.3, transition:"all 0.2s",
+    fontFamily:"system-ui, -apple-system, sans-serif", letterSpacing:0.3, transition:"all 0.2s",
+    background:"linear-gradient(135deg, #10b981, #14b8a6)",
+    boxShadow:"0 4px 20px rgba(16,185,129,0.3)",
   },
   btnDisabled: { opacity:0.6, cursor:"not-allowed" },
-  toggleRow:    { display:"flex", justifyContent:"space-between", alignItems:"center", background:"#1a1a2e", borderRadius:10, padding:"10px 14px" },
-  toggleLabel:  { fontSize:13, fontWeight:600, color:"#94a3b8" },
-  toggleBtn:    { border:"none", borderRadius:8, padding:"6px 16px", fontSize:13, fontWeight:700, cursor:"pointer", transition:"all 0.15s" },
+  toggleRow:    { display:"flex", justifyContent:"space-between", alignItems:"center", background:"#1a1f2e", borderRadius:10, padding:"10px 14px" },
+  toggleLabel:  { fontSize:13, fontWeight:600, color:"#9ca3af" },
+  toggleBtn:    { borderRadius:8, padding:"6px 16px", fontSize:13, fontWeight:700, cursor:"pointer", transition:"all 0.15s" },
   parcelasGrid: { display:"flex", flexWrap:"wrap", gap:6 },
   parcelaOpcao: { padding:"6px 12px", borderRadius:8, cursor:"pointer", fontSize:13, fontWeight:700, transition:"all 0.15s" },
-  previewParcelas: { background:"#1a1a2e", borderRadius:10, overflow:"hidden", marginTop:4 },
-  previewLinha: { display:"flex", alignItems:"center", gap:10, padding:"6px 12px", borderBottom:"1px solid #1e1e2e" },
-  previewNum:   { fontSize:11, color:"#94a3b8", minWidth:32 },
-  previewMes:   { fontSize:12, color:"#94a3b8", flex:1 },
-  previewValor: { fontSize:12, fontWeight:700, color:"#7c3aed" },
-  error: { color:"#ef4444", fontSize:13, margin:"0 20px", background:"#1a0a0a", borderRadius:8, padding:"10px 14px" },
+  previewParcelas: { background:"#1a1f2e", borderRadius:10, overflow:"hidden", marginTop:4, border:"1px solid #2a2f3e" },
+  previewLinha: { display:"flex", alignItems:"center", gap:10, padding:"6px 12px", borderBottom:"1px solid #2a2f3e" },
+  previewNum:   { fontSize:11, color:"#9ca3af", minWidth:32 },
+  previewMes:   { fontSize:12, color:"#9ca3af", flex:1 },
+  previewValor: { fontSize:12, fontWeight:700, color:"#10b981" },
+  error: { color:"#ef4444", fontSize:13, margin:"0 20px", background:"rgba(239,68,68,0.08)", border:"1px solid rgba(239,68,68,0.3)", borderRadius:12, padding:"10px 14px" },
   toast: {
     position:"fixed", bottom:32, left:"50%", transform:"translateX(-50%)",
     color:"#fff", padding:"12px 24px", borderRadius:40,
@@ -468,11 +475,10 @@ const s = {
 };
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0d0d1a; }
+  body { background: #0f1419; }
   input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
-  select option { background: #1e1e2e; color: #ccc; }
+  select option { background: #1a1f2e; color: #d1d5db; }
   .btn-salvar:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
   .btn-salvar:active:not(:disabled) { transform: translateY(0); }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }

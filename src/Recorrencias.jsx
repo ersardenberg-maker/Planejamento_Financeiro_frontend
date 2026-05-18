@@ -150,28 +150,27 @@ export default function Recorrencias() {
 }
 
 const s = {
-  page: { minHeight: "100vh", background: "#080f1a", color: "#e2e8f0", fontFamily: "'DM Sans', sans-serif", paddingBottom: 80 },
-  topbar: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", padding: 20, borderBottom: "1px solid #1e293b", position: "sticky", top: 0, zIndex: 10, background: "#080f1acc", backdropFilter: "blur(12px)" },
+  page: { minHeight: "100vh", background: "#0f1419", color: "#e2e8f0", fontFamily: "system-ui, -apple-system, sans-serif", paddingBottom: 80 },
+  topbar: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", padding: 20, borderBottom: "1px solid #2a2f3e", position: "sticky", top: 0, zIndex: 10, background: "rgba(15,20,25,0.92)", backdropFilter: "blur(12px)" },
   title: { fontSize: 20, fontWeight: 800 },
   sub: { color: "#94a3b8", fontSize: 11, letterSpacing: 1, textTransform: "uppercase" },
   controls: { display: "flex", gap: 8, flexWrap: "wrap" },
   body: { maxWidth: 900, margin: "0 auto", padding: 20, display: "flex", flexDirection: "column", gap: 16 },
-  card: { background: "#0a1628", border: "1px solid #1e293b", borderRadius: 14, padding: 16, display: "flex", flexDirection: "column", gap: 12 },
+  card: { background: "#1a1f2e", border: "1px solid #2a2f3e", borderRadius: 14, padding: 16, display: "flex", flexDirection: "column", gap: 12 },
   cardTitle: { fontWeight: 800 },
   grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 10 },
-  input: { background: "#1e293b", border: "1px solid #334155", borderRadius: 10, color: "#e2e8f0", padding: "11px 12px" },
-  smallInput: { width: 76, background: "#0f172a", border: "1px solid #1e293b", borderRadius: 10, color: "#e2e8f0", padding: "9px 10px" },
-  btnPrimario: { background: "#1d4ed8", border: "none", borderRadius: 10, color: "#fff", padding: "9px 14px", fontWeight: 700, cursor: "pointer" },
+  input: { background: "#1e2636", border: "1px solid #2a2f3e", borderRadius: 10, color: "#e2e8f0", padding: "11px 12px" },
+  smallInput: { width: 76, background: "#1a1f2e", border: "1px solid #2a2f3e", borderRadius: 10, color: "#e2e8f0", padding: "9px 10px" },
+  btnPrimario: { background: "linear-gradient(135deg, #10b981, #14b8a6)", border: "none", borderRadius: 10, color: "#fff", padding: "9px 14px", fontWeight: 700, cursor: "pointer" },
   btnDanger: { background: "#1a0a0a", border: "1px solid #7f1d1d", borderRadius: 8, color: "#fca5a5", padding: "7px 10px", cursor: "pointer" },
-  row: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "10px 0", borderTop: "1px solid #0f172a" },
+  row: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "10px 0", borderTop: "1px solid #141824" },
   meta: { color: "#94a3b8", fontSize: 12, marginTop: 2 },
   empty: { color: "#94a3b8", padding: 20, textAlign: "center" },
-  toast: { position: "fixed", right: 24, bottom: 24, background: "#14532d", border: "1px solid #22c55e", borderRadius: 12, padding: "12px 18px", fontWeight: 700 },
+  toast: { position: "fixed", right: 24, bottom: 24, background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.4)", borderRadius: 12, padding: "12px 18px", fontWeight: 700, color: "#6ee7b7" },
 };
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap');
   * { box-sizing: border-box; }
-  body { background: #080f1a; }
-  select option { background: #1e293b; color: #e2e8f0; }
+  body { background: #0f1419; }
+  select option { background: #1a1f2e; color: #e2e8f0; }
 `;

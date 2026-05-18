@@ -5,17 +5,16 @@ const API_URL = import.meta.env.VITE_API_URL;
 const TIPOS_CATEGORIA = [
   { value: "receita",          label: "Receita",           cor: "#22c55e" },
   { value: "despesa_fixa",     label: "Despesa Fixa",      cor: "#f97316" },
-  { value: "despesa_variavel", label: "Despesa Variável",  cor: "#3b82f6" },
+  { value: "despesa_variavel", label: "Despesa Variavel",  cor: "#10b981" },
 ];
 
-// ── Modal genérico ───────────────────────────────────────────────
 function Modal({ titulo, onFechar, children }) {
   return (
     <div style={s.overlay} onClick={onFechar}>
       <div style={s.modal} onClick={e => e.stopPropagation()}>
         <div style={s.modalHeader}>
           <span style={s.modalTitulo}>{titulo}</span>
-          <button style={s.modalFechar} onClick={onFechar}>✕</button>
+          <button style={s.modalFechar} onClick={onFechar}>x</button>
         </div>
         <div style={s.modalBody}>{children}</div>
       </div>
@@ -23,14 +22,13 @@ function Modal({ titulo, onFechar, children }) {
   );
 }
 
-// ── Seção de Categorias ──────────────────────────────────────────
 function SecaoCategorias() {
-  const [categorias, setCategorias] = useState([]);
-  const [loading, setLoading]       = useState(true);
-  const [modal, setModal]           = useState(null); // null | { modo: 'novo' | 'editar', item? }
-  const [form, setForm]             = useState({ nome: "", tipo: "despesa_variavel" });
-  const [saving, setSaving]         = useState(false);
-  const [erro, setErro]             = useState("");
+  const [categorias, setCategorias]   = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [modal, setModal]             = useState(null);
+  const [form, setForm]               = useState({ nome: "", tipo: "despesa_variavel" });
+  const [saving, setSaving]           = useState(false);
+  const [erro, setErro]               = useState("");
   const [filtroAtivo, setFiltroAtivo] = useState(true);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -77,7 +75,7 @@ function SecaoCategorias() {
       }
       setModal(null);
       carregar();
-    } catch { setErro("Erro ao salvar. Verifique se o nome já existe."); }
+    } catch { setErro("Erro ao salvar. Verifique se o nome ja existe."); }
     finally  { setSaving(false); }
   }
 
@@ -98,7 +96,6 @@ function SecaoCategorias() {
 
   return (
     <div style={s.secao}>
-      {/* Cabeçalho */}
       <div style={s.secaoHeader}>
         <div>
           <div style={s.secaoTitulo}>Categorias</div>
@@ -113,7 +110,6 @@ function SecaoCategorias() {
         </div>
       </div>
 
-      {/* Lista por tipo */}
       {loading ? (
         <div style={s.loadingWrap}><div style={s.spinner} /></div>
       ) : (
@@ -151,7 +147,6 @@ function SecaoCategorias() {
         </div>
       )}
 
-      {/* Modal novo/editar */}
       {modal && (
         <Modal
           titulo={modal.modo === "novo" ? "Nova Categoria" : "Editar Categoria"}
@@ -175,9 +170,9 @@ function SecaoCategorias() {
                   key={t.value}
                   style={{
                     ...s.tipoBotao,
-                    background: form.tipo === t.value ? t.cor + "22" : "#1e293b",
+                    background: form.tipo === t.value ? t.cor + "22" : "#1e2636",
                     color:      form.tipo === t.value ? t.cor : "#94a3b8",
-                    border:     `1px solid ${form.tipo === t.value ? t.cor : "#7c8fa8"}`,
+                    border:     `1px solid ${form.tipo === t.value ? t.cor : "#2a2f3e"}`,
                   }}
                   onClick={() => set("tipo", t.value)}
                 >
@@ -188,7 +183,7 @@ function SecaoCategorias() {
           </div>
           {erro && <div style={s.erro}>{erro}</div>}
           <button style={s.btnSalvarModal} onClick={salvar} disabled={saving}>
-            {saving ? "Salvando..." : modal.modo === "novo" ? "Cadastrar" : "Salvar alterações"}
+            {saving ? "Salvando..." : modal.modo === "novo" ? "Cadastrar" : "Salvar alteracoes"}
           </button>
         </Modal>
       )}
@@ -196,14 +191,13 @@ function SecaoCategorias() {
   );
 }
 
-// ── Seção de Cartões ─────────────────────────────────────────────
 function SecaoCartoes() {
-  const [cartoes, setCartoes]   = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [modal, setModal]       = useState(null);
-  const [form, setForm]         = useState({ nome: "", bandeira: "", dia_fechamento: "", dia_vencimento: "" });
-  const [saving, setSaving]     = useState(false);
-  const [erro, setErro]         = useState("");
+  const [cartoes, setCartoes]         = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [modal, setModal]             = useState(null);
+  const [form, setForm]               = useState({ nome: "", bandeira: "", dia_fechamento: "", dia_vencimento: "" });
+  const [saving, setSaving]           = useState(false);
+  const [erro, setErro]               = useState("");
   const [filtroAtivo, setFiltroAtivo] = useState(true);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -235,7 +229,7 @@ function SecaoCartoes() {
   }
 
   async function salvar() {
-    if (!form.nome.trim()) { setErro("Informe o nome do cartão."); return; }
+    if (!form.nome.trim()) { setErro("Informe o nome do cartao."); return; }
     setSaving(true); setErro("");
     const payload = {
       nome:           form.nome.trim(),
@@ -280,7 +274,7 @@ function SecaoCartoes() {
     <div style={s.secao}>
       <div style={s.secaoHeader}>
         <div>
-          <div style={s.secaoTitulo}>Cartões de Crédito</div>
+          <div style={s.secaoTitulo}>Cartoes de Credito</div>
           <div style={s.secaoSub}>{cartoes.filter(c => c.ativo).length} ativos</div>
         </div>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -298,7 +292,7 @@ function SecaoCartoes() {
         <div style={s.listaSimples}>
           {filtrados.length === 0 && (
             <div style={s.vazio}>
-              <span style={{ color: "#94a3b8" }}>{filtroAtivo ? "Nenhum cartão ativo." : "Nenhum cartão inativo."}</span>
+              <span style={{ color: "#94a3b8" }}>{filtroAtivo ? "Nenhum cartao ativo." : "Nenhum cartao inativo."}</span>
             </div>
           )}
           {filtrados.map(c => (
@@ -328,11 +322,11 @@ function SecaoCartoes() {
 
       {modal && (
         <Modal
-          titulo={modal.modo === "novo" ? "Novo Cartão" : "Editar Cartão"}
+          titulo={modal.modo === "novo" ? "Novo Cartao" : "Editar Cartao"}
           onFechar={() => setModal(null)}
         >
           <div style={s.formField}>
-            <label style={s.formLabel}>Nome do cartão *</label>
+            <label style={s.formLabel}>Nome do cartao *</label>
             <input style={s.formInput} placeholder="Ex: Nubank" value={form.nome} onChange={e => set("nome", e.target.value)} autoFocus />
           </div>
           <div style={s.formField}>
@@ -351,7 +345,7 @@ function SecaoCartoes() {
           </div>
           {erro && <div style={s.erro}>{erro}</div>}
           <button style={s.btnSalvarModal} onClick={salvar} disabled={saving}>
-            {saving ? "Salvando..." : modal.modo === "novo" ? "Cadastrar" : "Salvar alterações"}
+            {saving ? "Salvando..." : modal.modo === "novo" ? "Cadastrar" : "Salvar alteracoes"}
           </button>
         </Modal>
       )}
@@ -359,7 +353,6 @@ function SecaoCartoes() {
   );
 }
 
-// ── Tela principal ───────────────────────────────────────────────
 export default function Cadastros() {
   return (
     <div style={s.page}>
@@ -367,7 +360,7 @@ export default function Cadastros() {
       <div style={s.topbar}>
         <div>
           <div style={s.topbarTitle}>Cadastros</div>
-          <div style={s.topbarSub}>Finança Familiar</div>
+          <div style={s.topbarSub}>Financa Familiar</div>
         </div>
       </div>
       <div style={s.body}>
@@ -379,51 +372,50 @@ export default function Cadastros() {
 }
 
 const s = {
-  page:       { minHeight: "100vh", background: "#080f1a", fontFamily: "'DM Sans', sans-serif", color: "#e2e8f0", paddingBottom: 80 },
-  topbar:     { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px", borderBottom: "1px solid #1e293b", background: "#080f1acc", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 10 },
+  page:       { minHeight: "100vh", background: "#0f1419", fontFamily: "system-ui, -apple-system, sans-serif", color: "#e2e8f0", paddingBottom: 80 },
+  topbar:     { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px", borderBottom: "1px solid #2a2f3e", background: "rgba(15,20,25,0.92)", backdropFilter: "blur(20px)", position: "sticky", top: 0, zIndex: 10 },
   topbarTitle:{ fontSize: 20, fontWeight: 800, letterSpacing: -0.5 },
   topbarSub:  { fontSize: 11, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
   body:       { display: "flex", flexDirection: "column", gap: 24, padding: "20px", maxWidth: 700, margin: "0 auto" },
-  secao:      { background: "#0a1628", border: "1px solid #1e293b", borderRadius: 16, overflow: "hidden" },
-  secaoHeader:{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid #1e293b", background: "#0f172a", flexWrap: "wrap", gap: 10 },
+  secao:      { background: "#1a1f2e", border: "1px solid #2a2f3e", borderRadius: 16, overflow: "hidden" },
+  secaoHeader:{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", borderBottom: "1px solid #2a2f3e", background: "#141824", flexWrap: "wrap", gap: 10 },
   secaoTitulo:{ fontSize: 16, fontWeight: 800 },
   secaoSub:   { fontSize: 11, color: "#94a3b8", marginTop: 2 },
   filtroRow:  { display: "flex", gap: 4 },
-  filtroBotao:{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 8, color: "#94a3b8", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer" },
-  filtroBotaoAtivo: { background: "#1e293b", color: "#e2e8f0", borderColor: "#7c8fa8" },
-  btnPrimario:{ background: "#1d4ed8", border: "none", borderRadius: 10, color: "#fff", padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
+  filtroBotao:{ background: "#1a1f2e", border: "1px solid #2a2f3e", borderRadius: 8, color: "#94a3b8", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer" },
+  filtroBotaoAtivo: { background: "rgba(16,185,129,0.1)", color: "#10b981", borderColor: "rgba(16,185,129,0.4)" },
+  btnPrimario:{ background: "linear-gradient(135deg, #10b981, #14b8a6)", border: "none", borderRadius: 10, color: "#fff", padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer" },
   loadingWrap:{ display: "flex", alignItems: "center", justifyContent: "center", padding: 40 },
-  spinner:    { width: 24, height: 24, borderRadius: "50%", border: "3px solid #1e293b", borderTopColor: "#3b82f6", animation: "spin 0.8s linear infinite" },
+  spinner:    { width: 24, height: 24, borderRadius: "50%", border: "3px solid #2a2f3e", borderTopColor: "#10b981", animation: "spin 0.8s linear infinite" },
   listaGrupos:{ display: "flex", flexDirection: "column" },
   listaSimples:{ display: "flex", flexDirection: "column" },
-  grupo:      { borderBottom: "1px solid #0f172a" },
-  grupoHeader:{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 20px", background: "#0c1420", borderLeft: "3px solid" },
+  grupo:      { borderBottom: "1px solid #141824" },
+  grupoHeader:{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 20px", background: "#111926", borderLeft: "3px solid" },
   grupoTag:   { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, padding: "3px 10px", borderRadius: 6 },
   grupoCount: { fontSize: 12, color: "#94a3b8", fontWeight: 600 },
-  linhaItem:  { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 20px", borderBottom: "1px solid #0f172a", transition: "background 0.15s" },
+  linhaItem:  { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 20px", borderBottom: "1px solid #141824", transition: "background 0.15s" },
   itemNome:   { fontSize: 14, fontWeight: 600, color: "#cbd5e1" },
   itemMeta:   { display: "flex", gap: 10, fontSize: 11, color: "#94a3b8", marginTop: 2, flexWrap: "wrap" },
   itemAcoes:  { display: "flex", gap: 4 },
   btnAcao:    { background: "none", border: "none", fontSize: 16, cursor: "pointer", padding: "4px 6px", borderRadius: 6 },
   vazio:      { padding: "32px 20px", textAlign: "center" },
   overlay:    { position: "fixed", inset: 0, background: "#000000bb", zIndex: 200, display: "flex", alignItems: "flex-end", justifyContent: "center" },
-  modal:      { background: "#0f172a", border: "1px solid #1e293b", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 480, maxHeight: "90dvh", overflowY: "auto" },
-  modalHeader:{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 20px 0", position: "sticky", top: 0, background: "#0f172a" },
+  modal:      { background: "#1a1f2e", border: "1px solid #2a2f3e", borderRadius: "24px 24px 0 0", width: "100%", maxWidth: 480, maxHeight: "90dvh", overflowY: "auto" },
+  modalHeader:{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 20px 0", position: "sticky", top: 0, background: "#1a1f2e" },
   modalTitulo:{ fontSize: 18, fontWeight: 800 },
   modalFechar:{ background: "none", border: "none", color: "#94a3b8", fontSize: 18, cursor: "pointer" },
   modalBody:  { padding: "20px", display: "flex", flexDirection: "column", gap: 16 },
   formField:  { display: "flex", flexDirection: "column", gap: 6 },
   formLabel:  { fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
-  formInput:  { background: "#1e293b", border: "1px solid #334155", borderRadius: 10, color: "#e2e8f0", padding: "12px 14px", fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" },
+  formInput:  { background: "#1e2636", border: "1px solid #2a2f3e", borderRadius: 10, color: "#e2e8f0", padding: "12px 14px", fontSize: 14, outline: "none", fontFamily: "system-ui, -apple-system, sans-serif" },
   tipoGrid:   { display: "flex", flexDirection: "column", gap: 8 },
   tipoBotao:  { padding: "12px 16px", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700, textAlign: "left", transition: "all 0.15s" },
-  btnSalvarModal: { background: "#1d4ed8", border: "none", borderRadius: 12, color: "#fff", padding: "14px", fontSize: 15, fontWeight: 700, cursor: "pointer" },
+  btnSalvarModal: { background: "linear-gradient(135deg, #10b981, #14b8a6)", border: "none", borderRadius: 12, color: "#fff", padding: "14px", fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(16,185,129,0.3)" },
   erro:       { color: "#ef4444", fontSize: 13, background: "#1a0a0a", borderRadius: 8, padding: "10px 14px" },
 };
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #080f1a; }
+  body { background: #0f1419; }
   @keyframes spin { to { transform: rotate(360deg); } }
 `;

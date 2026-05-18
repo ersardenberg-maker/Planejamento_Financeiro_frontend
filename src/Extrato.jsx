@@ -64,8 +64,8 @@ function ModalEditar({ item, categorias, cartoes, onFechar, onSalvar }) {
     <div style={s.overlay} onClick={onFechar}>
       <div style={s.modal} onClick={e => e.stopPropagation()}>
         <div style={s.modalHeader}>
-          <strong>Editar lancamento</strong>
-          <button style={s.iconBtn} onClick={onFechar}>x</button>
+          <strong style={{ color: "#fff", fontSize: 16 }}>Editar lancamento</strong>
+          <button style={s.iconBtn} onClick={onFechar}>✕</button>
         </div>
         <div style={s.modalBody}>
           <label style={s.label}>Descricao</label>
@@ -226,7 +226,9 @@ export default function Extrato() {
 
         <div style={s.list}>
           {loading ? (
-            <div style={s.empty}>Carregando...</div>
+            <div style={s.empty}>
+              <div style={s.spinner} />
+            </div>
           ) : filtrados.length === 0 ? (
             <div style={s.empty}>Nenhum lancamento encontrado.</div>
           ) : filtrados.map(l => (
@@ -262,47 +264,287 @@ export default function Extrato() {
 }
 
 const s = {
-  page: { minHeight: "100vh", background: "#080f1a", color: "#e2e8f0", fontFamily: "'DM Sans', sans-serif", paddingBottom: 80 },
-  topbar: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", padding: 20, borderBottom: "1px solid #1e293b", position: "sticky", top: 0, background: "#080f1acc", backdropFilter: "blur(12px)", zIndex: 10 },
-  title: { fontSize: 20, fontWeight: 800 },
-  sub: { fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1 },
-  controls: { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" },
-  mesSelector: { display: "flex", alignItems: "center", gap: 4, background: "#0f172a", borderRadius: 10, border: "1px solid #1e293b", padding: "4px 8px" },
-  navBtn: { background: "none", border: "none", color: "#94a3b8", fontSize: 20, cursor: "pointer", padding: "0 8px" },
-  mesLabel: { minWidth: 140, textAlign: "center", fontSize: 13, fontWeight: 700 },
-  select: { background: "#0f172a", border: "1px solid #1e293b", borderRadius: 10, color: "#e2e8f0", padding: "9px 12px" },
-  body: { maxWidth: 920, margin: "0 auto", padding: 20, display: "flex", flexDirection: "column", gap: 16 },
-  summary: { background: "#0a1628", border: "1px solid #1e293b", borderRadius: 14, padding: 16, display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" },
-  summaryLabel: { display: "block", fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 1 },
-  summaryValue: { display: "block", fontSize: 24, marginTop: 4 },
-  search: { flex: "1 1 260px", background: "#0f172a", border: "1px solid #1e293b", borderRadius: 10, color: "#e2e8f0", padding: "12px 14px" },
-  list: { background: "#0a1628", border: "1px solid #1e293b", borderRadius: 14, overflow: "hidden" },
-  row: { display: "flex", justifyContent: "space-between", gap: 12, padding: "12px 16px", borderBottom: "1px solid #0f172a", alignItems: "center" },
-  rowMain: { minWidth: 0, display: "flex", flexDirection: "column", gap: 3 },
-  desc: { fontSize: 14, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
-  meta: { fontSize: 11, color: "#94a3b8" },
-  rowActions: { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "flex-end" },
-  value: { fontSize: 14, whiteSpace: "nowrap" },
-  smallBtn: { background: "#1e293b", border: "1px solid #334155", borderRadius: 8, color: "#cbd5e1", padding: "6px 10px", fontSize: 12, cursor: "pointer" },
-  smallBtnDanger: { background: "#1a0a0a", border: "1px solid #7f1d1d", borderRadius: 8, color: "#fca5a5", padding: "6px 10px", fontSize: 12, cursor: "pointer" },
-  empty: { padding: 40, color: "#94a3b8", textAlign: "center" },
-  overlay: { position: "fixed", inset: 0, background: "#000000aa", zIndex: 200, display: "flex", alignItems: "flex-end", justifyContent: "center" },
-  modal: { width: "100%", maxWidth: 520, maxHeight: "90dvh", overflowY: "auto", background: "#0f172a", border: "1px solid #1e293b", borderRadius: "20px 20px 0 0" },
-  modalHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 20px 0" },
-  iconBtn: { background: "none", border: "none", color: "#94a3b8", fontSize: 18, cursor: "pointer" },
-  modalBody: { display: "flex", flexDirection: "column", gap: 8, padding: 20 },
-  label: { fontSize: 11, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8 },
-  input: { width: "100%", background: "#1e293b", border: "1px solid #334155", borderRadius: 10, color: "#e2e8f0", padding: "11px 12px", fontSize: 14, boxSizing: "border-box" },
-  duasColunas: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 },
-  erro: { color: "#fca5a5", background: "#1a0a0a", borderRadius: 8, padding: 10, fontSize: 13 },
-  btnPrimario: { background: "#1d4ed8", border: "none", borderRadius: 12, color: "#fff", padding: 14, fontSize: 15, fontWeight: 700, cursor: "pointer", marginTop: 8 },
+  page: {
+    minHeight: "100vh",
+    background: "#0f1419",
+    color: "#fff",
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    paddingBottom: 80,
+  },
+  topbar: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 12,
+    flexWrap: "wrap",
+    padding: 20,
+    borderBottom: "1px solid #2a2f3e",
+    position: "sticky",
+    top: 0,
+    background: "rgba(15,20,25,0.92)",
+    backdropFilter: "blur(16px)",
+    zIndex: 10,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 800,
+    background: "linear-gradient(to right, #fff, #6ee7b7)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+  },
+  sub: {
+    fontSize: 11,
+    color: "#6b7280",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+  },
+  controls: {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    flexWrap: "wrap",
+  },
+  mesSelector: {
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+    background: "#1a1f2e",
+    borderRadius: 12,
+    border: "1px solid #2a2f3e",
+    padding: "4px 8px",
+  },
+  navBtn: {
+    background: "none",
+    border: "none",
+    color: "#9ca3af",
+    fontSize: 20,
+    cursor: "pointer",
+    padding: "0 8px",
+    lineHeight: 1,
+  },
+  mesLabel: {
+    minWidth: 140,
+    textAlign: "center",
+    fontSize: 13,
+    fontWeight: 700,
+    color: "#fff",
+  },
+  select: {
+    background: "#1a1f2e",
+    border: "1px solid #2a2f3e",
+    borderRadius: 12,
+    color: "#d1d5db",
+    padding: "9px 12px",
+    fontSize: 13,
+    cursor: "pointer",
+  },
+  body: {
+    maxWidth: 920,
+    margin: "0 auto",
+    padding: 20,
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+  },
+  summary: {
+    background: "#1a1f2e",
+    border: "1px solid #2a2f3e",
+    borderRadius: 16,
+    padding: 16,
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    flexWrap: "wrap",
+    alignItems: "center",
+  },
+  summaryLabel: {
+    display: "block",
+    fontSize: 11,
+    color: "#9ca3af",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+  },
+  summaryValue: {
+    display: "block",
+    fontSize: 24,
+    marginTop: 4,
+    color: "#e2e8f0",
+  },
+  search: {
+    flex: "1 1 260px",
+    background: "#0f1419",
+    border: "1px solid #2a2f3e",
+    borderRadius: 12,
+    color: "#d1d5db",
+    padding: "12px 14px",
+    fontSize: 14,
+  },
+  list: {
+    background: "#1a1f2e",
+    border: "1px solid #2a2f3e",
+    borderRadius: 20,
+    overflow: "hidden",
+  },
+  row: {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    padding: "12px 16px",
+    borderBottom: "1px solid #0f1419",
+    alignItems: "center",
+  },
+  rowMain: {
+    minWidth: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: 3,
+  },
+  desc: {
+    fontSize: 14,
+    color: "#fff",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
+  meta: {
+    fontSize: 11,
+    color: "#9ca3af",
+  },
+  rowActions: {
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    flexWrap: "wrap",
+    justifyContent: "flex-end",
+  },
+  value: {
+    fontSize: 14,
+    whiteSpace: "nowrap",
+    color: "#10b981",
+  },
+  smallBtn: {
+    background: "#1a1f2e",
+    border: "1px solid #2a2f3e",
+    borderRadius: 10,
+    color: "#9ca3af",
+    padding: "6px 10px",
+    fontSize: 12,
+    cursor: "pointer",
+  },
+  smallBtnDanger: {
+    background: "rgba(239,68,68,0.08)",
+    border: "1px solid rgba(239,68,68,0.2)",
+    borderRadius: 10,
+    color: "#f87171",
+    padding: "6px 10px",
+    fontSize: 12,
+    cursor: "pointer",
+  },
+  empty: {
+    padding: 40,
+    color: "#6b7280",
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  spinner: {
+    width: 32,
+    height: 32,
+    border: "3px solid #2a2f3e",
+    borderTop: "3px solid #10b981",
+    borderRadius: "50%",
+    animation: "spin 0.8s linear infinite",
+  },
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.7)",
+    zIndex: 200,
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+  modal: {
+    width: "100%",
+    maxWidth: 520,
+    maxHeight: "90dvh",
+    overflowY: "auto",
+    background: "#1a1f2e",
+    border: "1px solid #2a2f3e",
+    borderRadius: "24px 24px 0 0",
+  },
+  modalHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: "18px 20px 0",
+  },
+  iconBtn: {
+    background: "none",
+    border: "none",
+    color: "#9ca3af",
+    fontSize: 18,
+    cursor: "pointer",
+  },
+  modalBody: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
+    padding: 20,
+  },
+  label: {
+    fontSize: 11,
+    color: "#9ca3af",
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+  },
+  input: {
+    width: "100%",
+    background: "#1a1f2e",
+    border: "1px solid #2a2f3e",
+    borderRadius: 12,
+    color: "#d1d5db",
+    padding: "11px 12px",
+    fontSize: 14,
+    boxSizing: "border-box",
+  },
+  duasColunas: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 10,
+  },
+  erro: {
+    color: "#f87171",
+    background: "rgba(239,68,68,0.08)",
+    border: "1px solid rgba(239,68,68,0.2)",
+    borderRadius: 10,
+    padding: 10,
+    fontSize: 13,
+  },
+  btnPrimario: {
+    background: "linear-gradient(135deg, #10b981, #14b8a6)",
+    border: "none",
+    borderRadius: 14,
+    color: "#fff",
+    padding: 14,
+    fontSize: 15,
+    fontWeight: 700,
+    cursor: "pointer",
+    marginTop: 8,
+    width: "100%",
+  },
 };
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap');
   * { box-sizing: border-box; }
-  body { background: #080f1a; }
-  select option { background: #1e293b; color: #e2e8f0; }
+  body { background: #0f1419; }
+  select option { background: #1a1f2e; color: #d1d5db; }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
   @media (max-width: 640px) {
     .extrato-row { align-items: flex-start; }
   }

@@ -1,4 +1,16 @@
 import { useEffect, useState } from 'react'
+import {
+  LayoutDashboard,
+  PlusCircle,
+  CreditCard,
+  ScrollText,
+  TrendingDown,
+  Landmark,
+  RefreshCw,
+  CalendarDays,
+  Settings,
+  Wallet,
+} from 'lucide-react'
 import LancarGasto from './LancarGasto'
 import Planejamento from './Planejamento'
 import Dashboard from './Dashboard'
@@ -10,15 +22,15 @@ import Extrato from './Extrato'
 import Recorrencias from './Recorrencias'
 
 const TELAS = [
-  { key: 'dashboard',          label: 'Dashboard',    icon: 'D' },
-  { key: 'lancar',             label: 'Lancar',       icon: '+' },
-  { key: 'cartao',             label: 'Cartao',       icon: '$' },
-  { key: 'extrato',            label: 'Extrato',      icon: 'X' },
-  { key: 'despesas-variaveis', label: 'Variaveis',    icon: '%' },
-  { key: 'emprestimos',        label: 'Emprestimos',  icon: 'E' },
-  { key: 'recorrencias',       label: 'Recorrencias', icon: 'R' },
-  { key: 'planejamento',       label: 'Planejamento', icon: 'P' },
-  { key: 'cadastros',          label: 'Cadastros',    icon: '*' },
+  { key: 'dashboard',          label: 'Dashboard',    Icon: LayoutDashboard },
+  { key: 'lancar',             label: 'Lancar',       Icon: PlusCircle },
+  { key: 'cartao',             label: 'Cartao',       Icon: CreditCard },
+  { key: 'extrato',            label: 'Extrato',      Icon: ScrollText },
+  { key: 'despesas-variaveis', label: 'Variaveis',    Icon: TrendingDown },
+  { key: 'emprestimos',        label: 'Emprestimos',  Icon: Landmark },
+  { key: 'recorrencias',       label: 'Recorrencias', Icon: RefreshCw },
+  { key: 'planejamento',       label: 'Planejamento', Icon: CalendarDays },
+  { key: 'cadastros',          label: 'Cadastros',    Icon: Settings },
 ]
 
 export default function App() {
@@ -37,27 +49,6 @@ export default function App() {
       .replaceAll('ÃƒÂµ', 'õ')
       .replaceAll('ÃƒÂ´', 'ô')
       .replaceAll('Ãƒ', 'í')
-      .replaceAll('Ã‚Âº', 'º')
-      .replaceAll('Ã‚Âª', 'ª')
-      .replaceAll('Ã¢â‚¬â€', '-')
-      .replaceAll('Ã¢â‚¬Â¹', '<')
-      .replaceAll('Ã¢â‚¬Âº', '>')
-      .replaceAll('Ã¢â€ Â©', '<-')
-      .replaceAll('Ã¢â€ â€™', '->')
-      .replaceAll('Ã¢Å“â€œ', 'OK')
-      .replaceAll('Ã¢Å“â€¢', 'x')
-      .replaceAll('Ã¢Å“ÂÃ¯Â¸Â', 'Editar')
-      .replaceAll('Ã°Å¸â€™Â³', '')
-      .replaceAll('Ã°Å¸â€œÅ ', '')
-      .replaceAll('Ã°Å¸â€œË†', '')
-      .replaceAll('Ã°Å¸ÂÂ¦', '')
-      .replaceAll('Ã°Å¸â€œâ€¦', '')
-      .replaceAll('Ã°Å¸Å¡Â«', 'Inativar')
-      .replaceAll('Ã°Å¸â€Â´', '')
-      .replaceAll('Ã°Å¸Å¸Â¡', '')
-      .replaceAll('Ã°Å¸Å¸Â¢', '')
-      .replaceAll('Ã¢Å¡Â¡', '')
-      .replaceAll('Ã¢Å¡Â ', '')
 
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
     const nodes = []
@@ -72,7 +63,7 @@ export default function App() {
     <div style={s.root}>
       <style>{css}</style>
 
-      <div style={s.content}>
+      <div id="app-content" style={s.content}>
         {tela === 'dashboard'          && <Dashboard />}
         {tela === 'lancar'             && <LancarGasto />}
         {tela === 'cartao'             && <CartaoCredito />}
@@ -84,90 +75,160 @@ export default function App() {
         {tela === 'cadastros'          && <Cadastros />}
       </div>
 
-      <nav style={s.navMobile}>
-        {TELAS.map(t => (
-          <button
-            key={t.key}
-            style={{ ...s.navBtn, ...(tela === t.key ? s.navBtnAtivo : {}) }}
-            onClick={() => setTela(t.key)}
-          >
-            <span style={s.navIcon}>{t.icon}</span>
-            <span style={s.navLabel}>{t.label}</span>
-          </button>
-        ))}
+      <nav id="app-nav-mobile" style={s.navMobile}>
+        {TELAS.map(({ key, label, Icon }) => {
+          const ativo = tela === key
+          return (
+            <button
+              key={key}
+              style={{ ...s.navBtn, ...(ativo ? s.navBtnAtivo : {}) }}
+              onClick={() => setTela(key)}
+            >
+              <span style={{ ...s.navIconWrap, ...(ativo ? s.navIconWrapAtivo : {}) }}>
+                <Icon size={18} strokeWidth={ativo ? 2.2 : 1.8} />
+              </span>
+              <span style={s.navLabel}>{label}</span>
+            </button>
+          )
+        })}
       </nav>
 
-      <nav style={s.navDesktop}>
-        <div style={s.navDesktopLogo}>PF</div>
-        {TELAS.map(t => (
-          <button
-            key={t.key}
-            style={{ ...s.navDesktopBtn, ...(tela === t.key ? s.navDesktopBtnAtivo : {}) }}
-            onClick={() => setTela(t.key)}
-          >
-            <span style={s.navIcon}>{t.icon}</span>
-            <span style={s.navDesktopLabel}>{t.label}</span>
-          </button>
-        ))}
+      <nav id="app-nav-desktop" style={s.navDesktop}>
+        <div style={s.navDesktopLogoWrap}>
+          <div style={s.navDesktopLogoIcon}>
+            <Wallet size={20} strokeWidth={2} color="#fff" />
+          </div>
+          <span style={s.navDesktopLogoText}>Financas</span>
+        </div>
+
+        <div style={s.navDesktopDivider} />
+
+        {TELAS.map(({ key, label, Icon }) => {
+          const ativo = tela === key
+          return (
+            <button
+              key={key}
+              style={{ ...s.navDesktopBtn, ...(ativo ? s.navDesktopBtnAtivo : {}) }}
+              onClick={() => setTela(key)}
+            >
+              {ativo && <div style={s.navDesktopActivePill} />}
+              <Icon
+                size={18}
+                strokeWidth={ativo ? 2.2 : 1.8}
+                color={ativo ? '#10b981' : '#6b7280'}
+              />
+              <span style={{ ...s.navDesktopLabel, color: ativo ? '#e2e8f0' : '#6b7280' }}>
+                {label}
+              </span>
+            </button>
+          )
+        })}
       </nav>
     </div>
   )
 }
 
 const s = {
-  root:    { display: 'flex', minHeight: '100dvh', background: '#080f1a' },
+  root:    { display: 'flex', minHeight: '100dvh', background: '#0f1419' },
   content: { flex: 1, paddingBottom: 72 },
 
   navMobile: {
     position: 'fixed', bottom: 0, left: 0, right: 0,
-    height: 64, background: '#0a1120',
-    borderTop: '1px solid #1e293b',
+    height: 68,
+    background: 'rgba(15,20,25,0.92)',
+    backdropFilter: 'blur(20px) saturate(1.4)',
+    WebkitBackdropFilter: 'blur(20px) saturate(1.4)',
+    borderTop: '1px solid #2a2f3e',
     display: 'flex', zIndex: 100,
-    overflowX: 'auto',
-    overflowY: 'hidden',
+    overflowX: 'auto', overflowY: 'hidden',
     scrollbarWidth: 'none',
   },
   navBtn: {
-    flex: '0 0 auto', minWidth: 72, background: 'none', border: 'none',
+    flex: '0 0 auto', minWidth: 68, background: 'none', border: 'none',
     display: 'flex', flexDirection: 'column',
-    alignItems: 'center', justifyContent: 'center', gap: 3,
-    cursor: 'pointer', color: '#7c90a8', transition: 'color 0.15s',
-    padding: '0 8px',
+    alignItems: 'center', justifyContent: 'center', gap: 4,
+    cursor: 'pointer', color: '#6b7280', transition: 'color 0.2s ease',
+    padding: '0 6px',
   },
-  navBtnAtivo: { color: '#7c3aed' },
-  navIcon:     { fontSize: 17, lineHeight: 1, fontWeight: 900 },
-  navLabel:    { fontSize: 9, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5 },
+  navBtnAtivo: { color: '#10b981' },
+  navIconWrap: {
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    width: 32, height: 32, borderRadius: 10,
+    transition: 'all 0.2s ease',
+  },
+  navIconWrapAtivo: {
+    background: 'rgba(16,185,129,0.12)',
+    boxShadow: '0 0 12px rgba(16,185,129,0.2)',
+  },
+  navLabel: {
+    fontSize: 9, fontWeight: 700, textTransform: 'uppercase',
+    letterSpacing: 0.5, lineHeight: 1,
+  },
 
   navDesktop: {
     display: 'none',
-    width: 200, background: '#060d18',
-    borderRight: '1px solid #1e293b',
+    width: 220,
+    background: '#0a0e14',
+    borderRight: '1px solid #2a2f3e',
     flexDirection: 'column', alignItems: 'stretch',
-    padding: '24px 12px', gap: 4,
+    padding: '20px 12px',
+    gap: 2,
     position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 100,
   },
-  navDesktopLogo: {
-    fontSize: 20, fontWeight: 900, color: '#7c3aed',
-    letterSpacing: 2, padding: '8px 16px 24px',
-    fontFamily: "'Syne', sans-serif",
+  navDesktopLogoWrap: {
+    display: 'flex', alignItems: 'center', gap: 10,
+    padding: '4px 12px 20px',
+  },
+  navDesktopLogoIcon: {
+    background: 'linear-gradient(135deg, #10b981, #14b8a6)',
+    borderRadius: 10, padding: 6,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
+  },
+  navDesktopLogoText: {
+    fontSize: 16, fontWeight: 800,
+    background: 'linear-gradient(to right, #fff, #6ee7b7)',
+    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    fontFamily: 'system-ui, -apple-system, sans-serif',
+    letterSpacing: -0.3,
+  },
+  navDesktopDivider: {
+    height: 1, background: '#2a2f3e', margin: '4px 4px 12px',
   },
   navDesktopBtn: {
-    background: 'none', border: 'none',
-    display: 'flex', alignItems: 'center', gap: 12,
-    padding: '10px 16px', borderRadius: 10,
-    cursor: 'pointer', color: '#7c90a8', transition: 'all 0.15s',
+    position: 'relative',
+    background: 'none', border: '1px solid transparent',
+    display: 'flex', alignItems: 'center', gap: 10,
+    padding: '10px 14px', borderRadius: 12,
+    cursor: 'pointer', transition: 'all 0.2s ease',
     textAlign: 'left',
   },
-  navDesktopBtnAtivo: { background: '#130a2a', color: '#a78bfa' },
-  navDesktopLabel: { fontSize: 14, fontWeight: 600, fontFamily: "'Syne', sans-serif" },
+  navDesktopBtnAtivo: {
+    background: 'rgba(16,185,129,0.08)',
+    borderColor: 'rgba(16,185,129,0.15)',
+  },
+  navDesktopActivePill: {
+    position: 'absolute', left: 0, top: '50%',
+    transform: 'translateY(-50%)',
+    width: 3, height: 18, borderRadius: 99,
+    background: 'linear-gradient(to bottom, #10b981, #14b8a6)',
+  },
+  navDesktopLabel: {
+    fontSize: 14, fontWeight: 600,
+    fontFamily: 'system-ui, -apple-system, sans-serif',
+    transition: 'color 0.2s ease',
+  },
 }
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&display=swap');
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0f1419; }
   nav::-webkit-scrollbar { display: none; }
+
   @media (min-width: 768px) {
-    body > div > nav:nth-child(3) { display: none !important; }
-    body > div > nav:nth-child(2) { display: flex !important; }
-    body > div > div:first-child  { margin-left: 200px; padding-bottom: 0 !important; }
+    #app-nav-mobile { display: none !important; }
+    #app-nav-desktop { display: flex !important; }
+    #app-content { margin-left: 220px; padding-bottom: 0 !important; }
   }
 `

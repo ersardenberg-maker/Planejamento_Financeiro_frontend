@@ -1,14 +1,26 @@
 import { useState, useEffect, useCallback } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  TrendingUp,
+  TrendingDown,
+  Wallet,
+  AlertTriangle,
+  Clock,
+  CalendarDays,
+} from "lucide-react";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-               "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const MESES = [
+  "Janeiro","Fevereiro","Marco","Abril","Maio","Junho",
+  "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro",
+];
 
 const TIPOS = [
-  { key: "receita",          label: "Receitas",           cor: "#22c55e", bg: "#052e16" },
-  { key: "despesa_fixa",     label: "Despesas Fixas",     cor: "#f97316", bg: "#1c0a00" },
-  { key: "despesa_variavel", label: "Despesas Variáveis", cor: "#3b82f6", bg: "#0c1a2e" },
+  { key: "receita",          label: "Receitas",           cor: "#10b981", bg: "rgba(16,185,129,0.06)",  border: "rgba(16,185,129,0.18)" },
+  { key: "despesa_fixa",     label: "Despesas Fixas",     cor: "#f97316", bg: "rgba(249,115,22,0.06)",  border: "rgba(249,115,22,0.18)" },
+  { key: "despesa_variavel", label: "Despesas Variaveis", cor: "#3b82f6", bg: "rgba(59,130,246,0.06)",  border: "rgba(59,130,246,0.18)" },
 ];
 
 function fmtBRL(v) {
@@ -20,31 +32,61 @@ function pct(realizado, planejado) {
   return Math.min(Math.round((realizado / planejado) * 100), 999);
 }
 
-function BarraProgresso({ valor, max, cor }) {
+function BarraProgresso({ valor, max, cor, acima }) {
   const p = max > 0 ? Math.min((valor / max) * 100, 100) : 0;
-  const acima = valor > max && max > 0;
   return (
     <div style={s.barraFundo}>
-      <div style={{
-        ...s.barraPreenchida,
-        width: `${p}%`,
-        background: acima ? "#ef4444" : cor,
-        boxShadow: acima ? "0 0 8px #ef444466" : `0 0 8px ${cor}44`,
-      }} />
+      <div
+        style={{
+          ...s.barraPreenchida,
+          width: p + "%",
+          background: acima
+            ? "linear-gradient(to right, #ef4444, #f87171)"
+            : "linear-gradient(to right, " + cor + ", " + cor + "bb)",
+          boxShadow: acima
+            ? "0 0 8px rgba(239,68,68,0.4)"
+            : "0 0 8px " + cor + "44",
+        }}
+      />
     </div>
   );
 }
 
-function CardSaldo({ label, valor, sub, destaque }) {
+function CardSaldo({ label, valor, sub, destaque, Icon, iconColor }) {
   const positivo = parseFloat(valor) >= 0;
+
   return (
-    <div style={{ ...s.cardSaldo, borderColor: destaque ? (positivo ? "#22c55e" : "#ef4444") : "#1e293b", ...(destaque ? { gridColumn: "1 / -1" } : {}) }}>
-      <span style={s.cardSaldoLabel}>{label}</span>
-      <span style={{
-        ...s.cardSaldoValor,
-        color: destaque ? (positivo ? "#22c55e" : "#ef4444") : "#e2e8f0",
-        fontSize: destaque ? 20 : 16,
-      }}>
+    <div
+      style={{
+        ...s.cardSaldo,
+        ...(destaque ? s.cardSaldoDestaque : {}),
+        borderColor: destaque
+          ? positivo ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"
+          : "#2a2f3e",
+      }}
+    >
+      <div style={s.cardSaldoTop}>
+        <span style={s.cardSaldoLabel}>{label}</span>
+        {Icon && (
+          <div style={{ ...s.cardSaldoIconWrap, background: iconColor + "18" }}>
+            <Icon size={14} color={iconColor} strokeWidth={2} />
+          </div>
+        )}
+      </div>
+      <span
+        style={{
+          ...s.cardSaldoValor,
+          fontSize: destaque ? 22 : 18,
+          ...(destaque ? {
+            background: positivo
+              ? "linear-gradient(to right, #10b981, #34d399)"
+              : "linear-gradient(to right, #ef4444, #f87171)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          } : { color: "#e2e8f0" }),
+        }}
+      >
         {fmtBRL(valor)}
       </span>
       {sub && <span style={s.cardSaldoSub}>{sub}</span>}
@@ -53,165 +95,232 @@ function CardSaldo({ label, valor, sub, destaque }) {
 }
 
 function SecaoTipo({ tipo, itens }) {
-  const totalPlan = itens.reduce((s, i) => s + parseFloat(i.planejado), 0);
-  const totalReal = itens.reduce((s, i) => s + parseFloat(i.realizado), 0);
+  const totalPlan = itens.reduce(function(acc, i) { return acc + parseFloat(i.planejado); }, 0);
+  const totalReal = itens.reduce(function(acc, i) { return acc + parseFloat(i.realizado); }, 0);
   const acima = totalReal > totalPlan && tipo.key !== "receita";
+  const porcentagem = pct(totalReal, totalPlan);
 
   return (
-    <div style={s.secao}>
-      {/* Cabeçalho da seção */}
-      <div style={{ ...s.secaoHeader, borderLeftColor: tipo.cor }}>
+    <div style={{ ...s.secao, borderColor: tipo.border }}>
+      <div style={{ ...s.secaoHeader, background: tipo.bg, borderBottomColor: tipo.border }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ ...s.tipoTag, background: tipo.bg, color: tipo.cor }}>{tipo.label}</span>
+          <div style={{ ...s.secaoBarLateral, background: tipo.cor }} />
+          <span style={{ ...s.tipoTag, color: tipo.cor }}>{tipo.label}</span>
         </div>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 2 }}>
-            {fmtBRL(totalReal)} <span style={{ color: "#7c8fa8" }}>/ {fmtBRL(totalPlan)}</span>
+        <div style={s.secaoHeaderRight}>
+          <div style={s.secaoValores}>
+            <span style={{ color: acima ? "#ef4444" : "#e2e8f0", fontWeight: 700, fontSize: 14 }}>
+              {fmtBRL(totalReal)}
+            </span>
+            <span style={{ color: "#6b7280", fontSize: 13 }}>/ {fmtBRL(totalPlan)}</span>
           </div>
-          <div style={{ fontSize: 11, color: acima ? "#ef4444" : "#8faac0" }}>
-            {pct(totalReal, totalPlan)}% do planejado
+          <div style={{ ...s.secaoPct, color: acima ? "#ef4444" : porcentagem >= 80 ? "#facc15" : "#6b7280" }}>
+            {porcentagem}% do planejado
           </div>
         </div>
       </div>
 
-      {/* Itens */}
-      {itens.map(item => {
-        const p = parseFloat(item.planejado);
-        const r = parseFloat(item.realizado);
-        const acimaItem = r > p && p > 0 && tipo.key !== "receita";
-        return (
-          <div key={item.categoria} style={s.item}>
-            <div style={s.itemTopo}>
-              <span style={s.itemNome}>{item.categoria}</span>
-              <div style={s.itemValores}>
-                <span style={{ color: acimaItem ? "#ef4444" : "#e2e8f0", fontWeight: 600 }}>
-                  {fmtBRL(r)}
-                </span>
-                <span style={{ color: "#7c8fa8" }}>/ {fmtBRL(p)}</span>
+      <div>
+        {itens.map(function(item) {
+          var p = parseFloat(item.planejado);
+          var r = parseFloat(item.realizado);
+          var acimaItem = r > p && p > 0 && tipo.key !== "receita";
+          var pctItem = pct(r, p);
+          return (
+            <div key={item.categoria} style={s.item}>
+              <div style={s.itemTopo}>
+                <span style={s.itemNome}>{item.categoria}</span>
+                <div style={s.itemValores}>
+                  <span style={{ color: acimaItem ? "#ef4444" : "#e2e8f0", fontWeight: 700, fontSize: 13 }}>
+                    {fmtBRL(r)}
+                  </span>
+                  <span style={{ color: "#6b7280", fontSize: 12 }}>/ {fmtBRL(p)}</span>
+                  <span
+                    style={{
+                      ...s.itemBadge,
+                      color: acimaItem ? "#ef4444" : pctItem >= 80 ? "#facc15" : "#6b7280",
+                      background: acimaItem
+                        ? "rgba(239,68,68,0.1)"
+                        : pctItem >= 80 ? "rgba(250,204,21,0.1)" : "#0f1419",
+                    }}
+                  >
+                    {pctItem}%
+                  </span>
+                </div>
               </div>
+              <BarraProgresso valor={r} max={p} cor={tipo.cor} acima={acimaItem} />
             </div>
-            <BarraProgresso valor={r} max={p} cor={tipo.cor} />
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
 
 export default function Dashboard() {
-  const hoje = new Date();
-  const [mes, setMes]       = useState(hoje.getMonth() + 1);
-  const [ano, setAno]       = useState(hoje.getFullYear());
-  const [resumo, setResumo] = useState([]);
-  const [saldo, setSaldo]   = useState(null);
-  const [loading, setLoading] = useState(true);
+  var hoje = new Date();
+  var [mes, setMes]         = useState(hoje.getMonth() + 1);
+  var [ano, setAno]         = useState(hoje.getFullYear());
+  var [resumo, setResumo]   = useState([]);
+  var [saldo, setSaldo]     = useState(null);
+  var [loading, setLoading] = useState(true);
 
-  const carregar = useCallback(() => {
+  var carregar = useCallback(function() {
     setLoading(true);
     Promise.all([
-      fetch(`${API_URL}/dashboard/resumo-mensal?mes=${mes}&ano=${ano}`).then(r => r.json()),
-      fetch(`${API_URL}/dashboard/saldo-mensal?mes=${mes}&ano=${ano}`).then(r => r.json()),
-    ]).then(([res, sal]) => {
-      setResumo(res);
-      setSaldo(sal);
-    }).finally(() => setLoading(false));
+      fetch(API_URL + "/dashboard/resumo-mensal?mes=" + mes + "&ano=" + ano).then(function(r) { return r.json(); }),
+      fetch(API_URL + "/dashboard/saldo-mensal?mes=" + mes + "&ano=" + ano).then(function(r) { return r.json(); }),
+    ]).then(function(results) {
+      setResumo(results[0]);
+      setSaldo(results[1]);
+    }).finally(function() { setLoading(false); });
   }, [mes, ano]);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { carregar(); }, [carregar]);
+  useEffect(function() { carregar(); }, [carregar]);
 
-  const itensPorTipo = (tipo) => resumo.filter(r => r.tipo === tipo);
-  const variaveis = itensPorTipo("despesa_variavel");
-  const totalVariavelPlan = variaveis.reduce((s, i) => s + parseFloat(i.planejado || 0), 0);
-  const totalVariavelReal = variaveis.reduce((s, i) => s + parseFloat(i.realizado || 0), 0);
-  const restanteVariavel = totalVariavelPlan - totalVariavelReal;
-  const hojeMesAtual = hoje.getMonth() + 1 === mes && hoje.getFullYear() === ano;
-  const ultimoDiaMes = new Date(ano, mes, 0).getDate();
-  const diasRestantes = hojeMesAtual ? Math.max(ultimoDiaMes - hoje.getDate() + 1, 1) : ultimoDiaMes;
-  const limiteDiario = restanteVariavel > 0 ? restanteVariavel / diasRestantes : 0;
-  const categoriasEstouradas = resumo.filter(i => i.tipo !== "receita" && parseFloat(i.realizado) > parseFloat(i.planejado) && parseFloat(i.planejado) > 0);
-  const categoriasAtencao = resumo.filter(i => {
-    const planejado = parseFloat(i.planejado);
-    const realizado = parseFloat(i.realizado);
-    return i.tipo !== "receita" && planejado > 0 && realizado <= planejado && realizado / planejado >= 0.8;
+  function itensPorTipo(tipo) { return resumo.filter(function(r) { return r.tipo === tipo; }); }
+
+  var variaveis    = itensPorTipo("despesa_variavel");
+  var totalVariavelPlan = variaveis.reduce(function(acc, i) { return acc + parseFloat(i.planejado || 0); }, 0);
+  var totalVariavelReal = variaveis.reduce(function(acc, i) { return acc + parseFloat(i.realizado || 0); }, 0);
+  var restanteVariavel  = totalVariavelPlan - totalVariavelReal;
+
+  var hojeMesAtual  = hoje.getMonth() + 1 === mes && hoje.getFullYear() === ano;
+  var ultimoDiaMes  = new Date(ano, mes, 0).getDate();
+  var diasRestantes = hojeMesAtual ? Math.max(ultimoDiaMes - hoje.getDate() + 1, 1) : ultimoDiaMes;
+  var limiteDiario  = restanteVariavel > 0 ? restanteVariavel / diasRestantes : 0;
+
+  var categoriasEstouradas = resumo.filter(function(i) {
+    return i.tipo !== "receita" && parseFloat(i.realizado) > parseFloat(i.planejado) && parseFloat(i.planejado) > 0;
+  });
+  var categoriasAtencao = resumo.filter(function(i) {
+    var p = parseFloat(i.planejado);
+    var r = parseFloat(i.realizado);
+    return i.tipo !== "receita" && p > 0 && r <= p && r / p >= 0.8;
   });
 
-  const mesAnterior = () => {
-    if (mes === 1) { setMes(12); setAno(a => a - 1); }
-    else setMes(m => m - 1);
-  };
-  const mesProximo = () => {
-    if (mes === 12) { setMes(1); setAno(a => a + 1); }
-    else setMes(m => m + 1);
-  };
+  function mesAnterior() {
+    if (mes === 1) { setMes(12); setAno(function(a) { return a - 1; }); }
+    else setMes(function(m) { return m - 1; });
+  }
+  function mesProximo() {
+    if (mes === 12) { setMes(1); setAno(function(a) { return a + 1; }); }
+    else setMes(function(m) { return m + 1; });
+  }
 
   return (
     <div style={s.page}>
       <style>{css}</style>
 
-      {/* Topbar */}
       <div style={s.topbar}>
-        <div>
-          <div style={s.topbarTitle}>Dashboard</div>
-          <div style={s.topbarSub}>Finança Familiar</div>
+        <div style={s.topbarLeft}>
+          <div style={s.topbarIconWrap}>
+            <Wallet size={18} color="#10b981" strokeWidth={2} />
+          </div>
+          <div>
+            <div style={s.topbarTitle}>Dashboard</div>
+            <div style={s.topbarSub}>Financa Familiar</div>
+          </div>
         </div>
+
         <div style={s.mesSelector}>
-          <button style={s.navBtn} onClick={mesAnterior}>‹</button>
+          <button style={s.mesBtnNav} onClick={mesAnterior}>
+            <ChevronLeft size={16} strokeWidth={2.5} />
+          </button>
           <span style={s.mesLabel}>{MESES[mes - 1]} {ano}</span>
-          <button style={s.navBtn} onClick={mesProximo}>›</button>
+          <button style={s.mesBtnNav} onClick={mesProximo}>
+            <ChevronRight size={16} strokeWidth={2.5} />
+          </button>
         </div>
       </div>
 
       {loading ? (
         <div style={s.loadingWrap}>
           <div style={s.spinner} />
-          <span style={{ color: "#475569", marginTop: 12 }}>Carregando...</span>
+          <span style={{ color: "#6b7280", marginTop: 14, fontSize: 14 }}>Carregando...</span>
         </div>
       ) : (
         <div style={s.body}>
 
-          {/* Cards de saldo */}
           {saldo && (
             <div style={s.saldoGrid}>
-              <CardSaldo label="Receitas Realizadas"  valor={saldo.total_receitas}      sub={`Planejado: ${fmtBRL(saldo.total_receitas_plan)}`} />
-              <CardSaldo label="Despesas Realizadas"  valor={saldo.total_despesas}      sub={`Planejado: ${fmtBRL(saldo.total_despesas_plan)}`} />
-              <CardSaldo label="Saldo do Mês"         valor={saldo.saldo_realizado}     sub={`Planejado: ${fmtBRL(saldo.saldo_planejado)}`} destaque />
+              <CardSaldo
+                label="Receitas Realizadas"
+                valor={saldo.total_receitas}
+                sub={"Planejado: " + fmtBRL(saldo.total_receitas_plan)}
+                Icon={TrendingUp}
+                iconColor="#10b981"
+              />
+              <CardSaldo
+                label="Despesas Realizadas"
+                valor={saldo.total_despesas}
+                sub={"Planejado: " + fmtBRL(saldo.total_despesas_plan)}
+                Icon={TrendingDown}
+                iconColor="#f97316"
+              />
+              <CardSaldo
+                label="Saldo do Mes"
+                valor={saldo.saldo_realizado}
+                sub={"Planejado: " + fmtBRL(saldo.saldo_planejado)}
+                destaque
+                Icon={Wallet}
+                iconColor={parseFloat(saldo.saldo_realizado) >= 0 ? "#10b981" : "#ef4444"}
+              />
             </div>
           )}
 
           {resumo.length > 0 && (
-            <div style={s.insights}>
-              <div style={s.insightItem}>
-                <span style={s.insightLabel}>Variavel restante</span>
-                <strong style={{ ...s.insightValor, color: restanteVariavel >= 0 ? "#22c55e" : "#ef4444" }}>{fmtBRL(restanteVariavel)}</strong>
+            <div style={s.insightsGrid}>
+              <div style={s.insightCard}>
+                <div style={s.insightTop}>
+                  <CalendarDays size={14} color="#6b7280" strokeWidth={2} />
+                  <span style={s.insightLabel}>Variavel restante</span>
+                </div>
+                <strong style={{ ...s.insightValor, color: restanteVariavel >= 0 ? "#10b981" : "#ef4444" }}>
+                  {fmtBRL(restanteVariavel)}
+                </strong>
               </div>
-              <div style={s.insightItem}>
-                <span style={s.insightLabel}>Limite por dia</span>
-                <strong style={s.insightValor}>{fmtBRL(limiteDiario)}</strong>
+
+              <div style={s.insightCard}>
+                <div style={s.insightTop}>
+                  <Clock size={14} color="#6b7280" strokeWidth={2} />
+                  <span style={s.insightLabel}>Limite por dia</span>
+                </div>
+                <strong style={{ ...s.insightValor, color: "#e2e8f0" }}>
+                  {fmtBRL(limiteDiario)}
+                </strong>
                 <span style={s.insightSub}>{diasRestantes} dia(s) no periodo</span>
               </div>
-              <div style={s.insightItem}>
-                <span style={s.insightLabel}>Alertas</span>
-                <strong style={s.insightValor}>{categoriasEstouradas.length} estouro(s)</strong>
+
+              <div style={s.insightCard}>
+                <div style={s.insightTop}>
+                  <AlertTriangle size={14} color={categoriasEstouradas.length > 0 ? "#ef4444" : "#6b7280"} strokeWidth={2} />
+                  <span style={s.insightLabel}>Alertas</span>
+                </div>
+                <strong style={{ ...s.insightValor, color: categoriasEstouradas.length > 0 ? "#ef4444" : "#e2e8f0" }}>
+                  {categoriasEstouradas.length} estouro(s)
+                </strong>
                 <span style={s.insightSub}>{categoriasAtencao.length} em atencao</span>
               </div>
             </div>
           )}
 
-          {/* Sem dados */}
           {resumo.length === 0 && (
             <div style={s.vazio}>
-              <span style={{ fontSize: 40 }}>📊</span>
-              <span style={{ color: "#475569", marginTop: 12 }}>
-                Nenhum dado para {MESES[mes - 1]}/{ano}.<br />
-                Adicione lançamentos ou defina o planejamento.
+              <div style={s.vazioIcon}>
+                <Wallet size={32} color="#4b5563" strokeWidth={1.5} />
+              </div>
+              <span style={{ color: "#6b7280", marginTop: 16, fontSize: 15, fontWeight: 500 }}>
+                Nenhum dado para {MESES[mes - 1]}/{ano}.
+              </span>
+              <span style={{ color: "#4b5563", marginTop: 6, fontSize: 13 }}>
+                Adicione lancamentos ou defina o planejamento.
               </span>
             </div>
           )}
 
-          {/* Seções por tipo */}
-          {TIPOS.map(tipo => {
-            const itens = itensPorTipo(tipo.key);
+          {TIPOS.map(function(tipo) {
+            var itens = itensPorTipo(tipo.key);
             if (!itens.length) return null;
             return <SecaoTipo key={tipo.key} tipo={tipo} itens={itens} />;
           })}
@@ -222,103 +331,148 @@ export default function Dashboard() {
   );
 }
 
-const s = {
+var s = {
   page: {
     minHeight: "100vh",
-    background: "#080f1a",
-    fontFamily: "'Syne', sans-serif",
+    background: "#0f1419",
+    fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif",
     color: "#e2e8f0",
     paddingBottom: 80,
   },
   topbar: {
     display: "flex", justifyContent: "space-between", alignItems: "center",
-    padding: "24px 24px",
-    borderBottom: "1px solid #1e293b",
+    padding: "20px 24px",
+    borderBottom: "1px solid #2a2f3e",
     position: "sticky", top: 0, zIndex: 10,
-    background: "#080f1acc",
-    backdropFilter: "blur(12px)",
-    flexWrap: "wrap", gap: 16,
+    background: "rgba(15,20,25,0.92)",
+    backdropFilter: "blur(16px)",
+    WebkitBackdropFilter: "blur(16px)",
+    flexWrap: "wrap", gap: 12,
   },
-  topbarTitle: { fontSize: 22, fontWeight: 800, letterSpacing: -0.5 },
-  topbarSub:   { fontSize: 12, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
+  topbarLeft: { display: "flex", alignItems: "center", gap: 12 },
+  topbarIconWrap: {
+    background: "rgba(16,185,129,0.12)",
+    borderRadius: 10, padding: 8,
+    display: "flex", alignItems: "center", justifyContent: "center",
+  },
+  topbarTitle: {
+    fontSize: 18, fontWeight: 800, letterSpacing: -0.5,
+    background: "linear-gradient(to right, #fff, #6ee7b7)",
+    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
+  },
+  topbarSub: {
+    fontSize: 11, color: "#6b7280", marginTop: 1,
+    letterSpacing: 1, textTransform: "uppercase", fontWeight: 600,
+  },
   mesSelector: {
     display: "flex", alignItems: "center", gap: 4,
-    background: "#0f172a", borderRadius: 10,
-    border: "1px solid #1e293b", padding: "4px 8px",
+    background: "#1a1f2e", borderRadius: 12,
+    border: "1px solid #2a2f3e", padding: "4px 6px",
   },
-  mesLabel: { fontSize: 14, fontWeight: 700, minWidth: 160, textAlign: "center", color: "#cbd5e1" },
-  navBtn: {
-    background: "none", border: "none", color: "#475569",
-    fontSize: 20, cursor: "pointer", padding: "0 8px", lineHeight: 1,
-    borderRadius: 6,
+  mesLabel: {
+    fontSize: 13, fontWeight: 700,
+    minWidth: 150, textAlign: "center", color: "#d1d5db",
+  },
+  mesBtnNav: {
+    background: "none", border: "none", color: "#6b7280",
+    cursor: "pointer", padding: "4px 6px", lineHeight: 0,
+    borderRadius: 8, display: "flex", alignItems: "center",
   },
   loadingWrap: {
     display: "flex", flexDirection: "column", alignItems: "center",
     justifyContent: "center", padding: 80,
   },
   spinner: {
-    width: 32, height: 32, borderRadius: "50%",
-    border: "3px solid #1e293b", borderTopColor: "#3b82f6",
+    width: 36, height: 36, borderRadius: "50%",
+    border: "3px solid #2a2f3e", borderTopColor: "#10b981",
     animation: "spin 0.8s linear infinite",
   },
   body: {
-    display: "flex", flexDirection: "column", gap: 24,
+    display: "flex", flexDirection: "column", gap: 20,
     padding: "24px",
-    maxWidth: 900, margin: "0 auto",
+    maxWidth: 960, margin: "0 auto",
   },
   saldoGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gridTemplateRows: "auto auto",
     gap: 12,
   },
   cardSaldo: {
-    background: "#0f172a", border: "1px solid",
-    borderRadius: 16, padding: "14px 16px",
-    display: "flex", flexDirection: "column", gap: 4,
+    background: "#1a1f2e",
+    border: "1px solid",
+    borderRadius: 20, padding: "18px 20px",
+    display: "flex", flexDirection: "column", gap: 6,
     overflow: "hidden", minWidth: 0,
   },
-  cardSaldoLabel: { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8" },
-  cardSaldoValor: { fontWeight: 800, letterSpacing: -0.5, marginTop: 4, wordBreak: 'break-all', lineHeight: 1.2 },
-  cardSaldoSub:   { fontSize: 12, color: "#7c8fa8", marginTop: 2 },
-  insights: {
-    background: "#0a1628", border: "1px solid #1e293b",
-    borderRadius: 16, padding: 16,
-    display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+  cardSaldoDestaque: {
+    gridColumn: "1 / -1",
+    background: "linear-gradient(135deg, #1a1f2e, #111a14)",
+  },
+  cardSaldoTop: { display: "flex", justifyContent: "space-between", alignItems: "center" },
+  cardSaldoLabel: {
+    fontSize: 11, fontWeight: 700, textTransform: "uppercase",
+    letterSpacing: 0.8, color: "#6b7280",
+  },
+  cardSaldoIconWrap: {
+    padding: 5, borderRadius: 8,
+    display: "flex", alignItems: "center", justifyContent: "center",
+  },
+  cardSaldoValor: {
+    fontWeight: 800, letterSpacing: -0.5, marginTop: 2,
+    wordBreak: "break-all", lineHeight: 1.2,
+  },
+  cardSaldoSub: { fontSize: 12, color: "#6b7280", marginTop: 2 },
+  insightsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
     gap: 12,
   },
-  insightItem: {
-    background: "#0f172a", border: "1px solid #1e293b",
-    borderRadius: 12, padding: 14,
-    display: "flex", flexDirection: "column", gap: 4,
+  insightCard: {
+    background: "#1a1f2e", border: "1px solid #2a2f3e",
+    borderRadius: 16, padding: "16px 18px",
+    display: "flex", flexDirection: "column", gap: 6,
   },
-  insightLabel: { fontSize: 11, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1 },
-  insightValor: { fontSize: 18, color: "#e2e8f0" },
-  insightSub: { fontSize: 12, color: "#7c8fa8" },
+  insightTop: { display: "flex", alignItems: "center", gap: 6 },
+  insightLabel: {
+    fontSize: 11, color: "#6b7280", fontWeight: 700,
+    textTransform: "uppercase", letterSpacing: 0.8,
+  },
+  insightValor: { fontSize: 18, letterSpacing: -0.3 },
+  insightSub:   { fontSize: 12, color: "#6b7280" },
   secao: {
-    background: "#0a1628", border: "1px solid #1e293b",
-    borderRadius: 16, overflow: "hidden",
+    background: "#1a1f2e",
+    border: "1px solid",
+    borderRadius: 20, overflow: "hidden",
   },
   secaoHeader: {
     display: "flex", justifyContent: "space-between", alignItems: "center",
-    padding: "16px 20px", background: "#0f172a",
-    borderBottom: "1px solid #1e293b",
-    borderLeft: "3px solid",
+    padding: "14px 20px",
+    borderBottom: "1px solid",
+  },
+  secaoBarLateral: {
+    width: 3, height: 16, borderRadius: 99, flexShrink: 0,
   },
   tipoTag: {
-    fontSize: 11, fontWeight: 700, textTransform: "uppercase",
-    letterSpacing: 1, padding: "4px 10px", borderRadius: 6,
+    fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8,
   },
+  secaoHeaderRight: { textAlign: "right", display: "flex", flexDirection: "column", gap: 2 },
+  secaoValores: { display: "flex", alignItems: "baseline", gap: 6, justifyContent: "flex-end" },
+  secaoPct: { fontSize: 11, fontWeight: 600 },
   item: {
     padding: "12px 20px",
-    borderBottom: "1px solid #0f172a",
+    borderBottom: "1px solid #0f1419",
     display: "flex", flexDirection: "column", gap: 8,
   },
-  itemTopo: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-  itemNome: { fontSize: 14, color: "#cbd5e1", fontWeight: 500 },
-  itemValores: { display: "flex", alignItems: "baseline", gap: 6, fontSize: 13 },
+  itemTopo: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 },
+  itemNome: { fontSize: 13, color: "#d1d5db", fontWeight: 500, flexShrink: 0 },
+  itemValores: { display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" },
+  itemBadge: {
+    fontSize: 10, fontWeight: 700, letterSpacing: 0.5,
+    padding: "2px 6px", borderRadius: 6,
+  },
   barraFundo: {
-    width: "100%", height: 4, background: "#1e293b",
+    width: "100%", height: 4, background: "#2a2f3e",
     borderRadius: 99, overflow: "hidden",
   },
   barraPreenchida: {
@@ -327,13 +481,16 @@ const s = {
   },
   vazio: {
     display: "flex", flexDirection: "column", alignItems: "center",
-    padding: 60, textAlign: "center", lineHeight: 1.8,
+    padding: 60, textAlign: "center",
+  },
+  vazioIcon: {
+    background: "#1a1f2e", borderRadius: 20, padding: 20,
+    border: "1px solid #2a2f3e",
   },
 };
 
-const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap');
+var css = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #080f1a; }
+  body { background: #0f1419; }
   @keyframes spin { to { transform: rotate(360deg); } }
 `;

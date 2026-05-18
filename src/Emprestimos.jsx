@@ -22,10 +22,10 @@ function diasAteVencer(dataStr) {
 function BadgeVencimento({ data }) {
   const dias = diasAteVencer(data);
   if (dias === null) return null;
-  if (dias < 0)  return <span style={{ ...s.badge, background: "#7f1d1d", color: "#fca5a5" }}>Vencida há {Math.abs(dias)}d</span>;
+  if (dias < 0)   return <span style={{ ...s.badge, background: "#7f1d1d", color: "#fca5a5" }}>Vencida ha {Math.abs(dias)}d</span>;
   if (dias === 0) return <span style={{ ...s.badge, background: "#7f1d1d", color: "#fca5a5" }}>Vence hoje!</span>;
   if (dias <= 5)  return <span style={{ ...s.badge, background: "#78350f", color: "#fcd34d" }}>Vence em {dias}d</span>;
-  return <span style={{ ...s.badge, background: "#0c1a2e", color: "#94a3b8" }}>Vence em {dias}d</span>;
+  return <span style={{ ...s.badge, background: "rgba(16,185,129,0.1)", color: "#6ee7b7" }}>Vence em {dias}d</span>;
 }
 
 function ModalNovoEmprestimo({ emprestimo, onSalvar, onFechar }) {
@@ -48,8 +48,8 @@ function ModalNovoEmprestimo({ emprestimo, onSalvar, onFechar }) {
     if (!form.nome)           { setErro("Informe o nome."); return; }
     if (!form.valor_total)    { setErro("Informe o valor total."); return; }
     if (!form.valor_parcela)  { setErro("Informe o valor da parcela."); return; }
-    if (!form.total_parcelas) { setErro("Informe o número de parcelas."); return; }
-    if (!form.data_inicio)    { setErro("Informe a data de início."); return; }
+    if (!form.total_parcelas) { setErro("Informe o numero de parcelas."); return; }
+    if (!form.data_inicio)    { setErro("Informe a data de inicio."); return; }
     setSaving(true); setErro("");
     try {
       await onSalvar({
@@ -72,16 +72,16 @@ function ModalNovoEmprestimo({ emprestimo, onSalvar, onFechar }) {
       <div style={s.modal} onClick={e => e.stopPropagation()}>
         <div style={s.modalHeader}>
           <span style={s.modalTitulo}>{emprestimo ? "Editar Emprestimo" : "Novo Emprestimo"}</span>
-          <button style={s.modalFechar} onClick={onFechar}>✕</button>
+          <button style={s.modalFechar} onClick={onFechar}>x</button>
         </div>
         <div style={s.modalBody}>
           {[
-            { label: "Nome / Descrição *", key: "nome", placeholder: "Ex: Financiamento carro" },
-            { label: "Credor", key: "credor", placeholder: "Ex: Banco Itaú" },
+            { label: "Nome / Descricao *", key: "nome", placeholder: "Ex: Financiamento carro" },
+            { label: "Credor", key: "credor", placeholder: "Ex: Banco Itau" },
             { label: "Valor Total (R$) *", key: "valor_total", placeholder: "Ex: 15000,00", inputMode: "decimal" },
             { label: "Valor da Parcela (R$) *", key: "valor_parcela", placeholder: "Ex: 850,00", inputMode: "decimal" },
-            { label: "Nº de Parcelas *", key: "total_parcelas", placeholder: "Ex: 24", inputMode: "numeric" },
-            { label: "Data de Início *", key: "data_inicio", type: "date" },
+            { label: "No de Parcelas *", key: "total_parcelas", placeholder: "Ex: 24", inputMode: "numeric" },
+            { label: "Data de Inicio *", key: "data_inicio", type: "date" },
             { label: "Dia de Vencimento", key: "dia_vencimento", placeholder: "Ex: 10", inputMode: "numeric" },
             { label: "Taxa de Juros Mensal (%)", key: "taxa_juros_mensal", placeholder: "Ex: 1,99", inputMode: "decimal" },
           ].map(f => (
@@ -98,10 +98,10 @@ function ModalNovoEmprestimo({ emprestimo, onSalvar, onFechar }) {
             </div>
           ))}
           <div style={s.formField}>
-            <label style={s.formLabel}>Observação</label>
+            <label style={s.formLabel}>Observacao</label>
             <textarea
               style={{ ...s.formInput, minHeight: 72, resize: "vertical" }}
-              placeholder="Observações adicionais..."
+              placeholder="Observacoes adicionais..."
               value={form.observacao}
               onChange={e => set("observacao", e.target.value)}
             />
@@ -117,10 +117,10 @@ function ModalNovoEmprestimo({ emprestimo, onSalvar, onFechar }) {
 }
 
 function CardEmprestimo({ emp, excluindo, onEditar, onExcluir, onPagarParcela }) {
-  const [expandido, setExpandido]   = useState(false);
-  const [parcelas, setParcelas]     = useState([]);
+  const [expandido, setExpandido]       = useState(false);
+  const [parcelas, setParcelas]         = useState([]);
   const [loadParcelas, setLoadParcelas] = useState(false);
-  const [pagando, setPagando]       = useState(null);
+  const [pagando, setPagando]           = useState(null);
 
   const pct = emp.total_parcelas > 0
     ? Math.round((emp.parcelas_pagas / emp.total_parcelas) * 100) : 0;
@@ -146,9 +146,7 @@ function CardEmprestimo({ emp, excluindo, onEditar, onExcluir, onPagarParcela })
   }
 
   return (
-    <div style={{ ...s.card, borderColor: emp.status === "quitado" ? "#1e3a1e" : "#1e293b" }}>
-
-      {/* Cabeçalho */}
+    <div style={{ ...s.card, borderColor: emp.status === "quitado" ? "#1e3a1e" : "#2a2f3e" }}>
       <div style={s.cardHeader}>
         <div>
           <div style={s.cardNome}>{emp.nome}</div>
@@ -161,15 +159,14 @@ function CardEmprestimo({ emp, excluindo, onEditar, onExcluir, onPagarParcela })
           </div>
         </div>
         <div style={{ textAlign: "right" }}>
-          <div style={s.cardParcela}>{fmtBRL(emp.valor_parcela)}<span style={s.cardParcelaLabel}>/mês</span></div>
+          <div style={s.cardParcela}>{fmtBRL(emp.valor_parcela)}<span style={s.cardParcelaLabel}>/mes</span></div>
           {emp.status === "quitado"
-            ? <span style={{ ...s.badge, background: "#052e16", color: "#86efac" }}>✓ Quitado</span>
-            : <span style={{ ...s.badge, background: "#0c1a2e", color: "#93c5fd" }}>{emp.parcelas_pagas}/{emp.total_parcelas} pagas</span>
+            ? <span style={{ ...s.badge, background: "#052e16", color: "#86efac" }}>Quitado</span>
+            : <span style={{ ...s.badge, background: "rgba(16,185,129,0.1)", color: "#6ee7b7" }}>{emp.parcelas_pagas}/{emp.total_parcelas} pagas</span>
           }
         </div>
       </div>
 
-      {/* Barra de progresso */}
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
           <span style={s.barraLabel}>Progresso</span>
@@ -179,12 +176,11 @@ function CardEmprestimo({ emp, excluindo, onEditar, onExcluir, onPagarParcela })
           <div style={{
             ...s.barraPreenchida,
             width: `${pct}%`,
-            background: emp.status === "quitado" ? "#22c55e" : "#3b82f6",
+            background: emp.status === "quitado" ? "#22c55e" : "#10b981",
           }} />
         </div>
       </div>
 
-      {/* Info resumida */}
       <div style={s.cardInfo}>
         <div style={s.cardInfoBloco}>
           <span style={s.cardInfoLabel}>Total</span>
@@ -202,13 +198,12 @@ function CardEmprestimo({ emp, excluindo, onEditar, onExcluir, onPagarParcela })
         </div>
       </div>
 
-      {/* Próxima parcela */}
       {proximaPendente && (
         <div style={s.proximaParcela}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-            <span style={s.cardInfoLabel}>Próxima parcela:</span>
+            <span style={s.cardInfoLabel}>Proxima parcela:</span>
             <span style={{ color: "#cbd5e1", fontWeight: 600, fontSize: 13 }}>
-              {proximaPendente.numero_parcela}ª — {fmtBRL(proximaPendente.valor_previsto)} — {fmtData(proximaPendente.data_vencimento)}
+              {proximaPendente.numero_parcela}a - {fmtBRL(proximaPendente.valor_previsto)} - {fmtData(proximaPendente.data_vencimento)}
             </span>
             <BadgeVencimento data={proximaPendente.data_vencimento} />
           </div>
@@ -222,14 +217,12 @@ function CardEmprestimo({ emp, excluindo, onEditar, onExcluir, onPagarParcela })
         </div>
       )}
 
-      {/* Botão expandir parcelas */}
       {emp.status !== "quitado" && (
         <button style={s.btnExpandir} onClick={carregarParcelas}>
-          {loadParcelas ? "Carregando..." : expandido ? "▲ Ocultar parcelas" : "▼ Ver todas as parcelas"}
+          {loadParcelas ? "Carregando..." : expandido ? "Ocultar parcelas" : "Ver todas as parcelas"}
         </button>
       )}
 
-      {/* Lista de parcelas */}
       {expandido && parcelas.length > 0 && (
         <div style={s.listaParcelas}>
           {parcelas.map(p => (
@@ -245,7 +238,7 @@ function CardEmprestimo({ emp, excluindo, onEditar, onExcluir, onPagarParcela })
                 ...s.parcelaStatus,
                 color: p.status === "paga" ? "#22c55e" : p.status === "atrasada" ? "#ef4444" : "#94a3b8",
               }}>
-                {p.status === "paga" ? "✓ Paga" : p.status === "atrasada" ? "⚠ Atrasada" : "Pendente"}
+                {p.status === "paga" ? "Paga" : p.status === "atrasada" ? "Atrasada" : "Pendente"}
               </span>
               {p.status !== "paga" && (
                 <button
@@ -337,14 +330,12 @@ export default function Emprestimos() {
     <div style={s.page}>
       <style>{css}</style>
 
-      {/* Topbar */}
       <div style={s.topbar}>
         <div>
-          <div style={s.topbarTitle}>Empréstimos</div>
-          <div style={s.topbarSub}>Finança Familiar</div>
+          <div style={s.topbarTitle}>Emprestimos</div>
+          <div style={s.topbarSub}>Financa Familiar</div>
         </div>
         <div style={s.topbarAcoes}>
-          {/* Filtro */}
           <div style={s.filtroRow}>
             {["ativo","quitado",""].map((f, i) => (
               <button
@@ -360,7 +351,6 @@ export default function Emprestimos() {
         </div>
       </div>
 
-      {/* Resumo */}
       {filtro === "ativo" && emprestimos.length > 0 && (
         <div style={s.resumo}>
           <div style={s.resumoBloco}>
@@ -368,13 +358,12 @@ export default function Emprestimos() {
             <span style={s.resumoValor}>{fmtBRL(totalMensal)}</span>
           </div>
           <div style={s.resumoBloco}>
-            <span style={s.resumoLabel}>Empréstimos ativos</span>
+            <span style={s.resumoLabel}>Emprestimos ativos</span>
             <span style={s.resumoValor}>{emprestimos.length}</span>
           </div>
         </div>
       )}
 
-      {/* Lista */}
       <div style={s.body}>
         {loading ? (
           <div style={s.loadingWrap}><div style={s.spinner} /></div>
@@ -382,10 +371,10 @@ export default function Emprestimos() {
           <div style={s.vazio}>
             <span style={{ fontSize: 40 }}>🏦</span>
             <span style={{ color: "#94a3b8", marginTop: 12 }}>
-              {filtro === "ativo" ? "Nenhum empréstimo ativo." : "Nenhum empréstimo encontrado."}
+              {filtro === "ativo" ? "Nenhum emprestimo ativo." : "Nenhum emprestimo encontrado."}
             </span>
             <button style={{ ...s.btnNovo, marginTop: 20 }} onClick={() => setModalAberto(true)}>
-              + Cadastrar empréstimo
+              + Cadastrar emprestimo
             </button>
           </div>
         ) : (
@@ -417,12 +406,12 @@ export default function Emprestimos() {
 }
 
 const s = {
-  page: { minHeight: "100vh", background: "#080f1a", fontFamily: "'DM Sans', sans-serif", color: "#e2e8f0", paddingBottom: 80 },
+  page: { minHeight: "100vh", background: "#0f1419", fontFamily: "system-ui, -apple-system, sans-serif", color: "#e2e8f0", paddingBottom: 80 },
   topbar: {
     display: "flex", justifyContent: "space-between", alignItems: "center",
-    padding: "20px", borderBottom: "1px solid #1e293b",
+    padding: "20px", borderBottom: "1px solid #2a2f3e",
     position: "sticky", top: 0, zIndex: 10,
-    background: "#080f1acc", backdropFilter: "blur(12px)",
+    background: "rgba(15,20,25,0.92)", backdropFilter: "blur(20px)",
     flexWrap: "wrap", gap: 12,
   },
   topbarTitle: { fontSize: 20, fontWeight: 800, letterSpacing: -0.5 },
@@ -430,69 +419,68 @@ const s = {
   topbarAcoes: { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" },
   filtroRow:   { display: "flex", gap: 4 },
   filtroBotao: {
-    background: "#0f172a", border: "1px solid #1e293b", borderRadius: 8,
+    background: "#1a1f2e", border: "1px solid #2a2f3e", borderRadius: 8,
     color: "#94a3b8", padding: "6px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer",
   },
-  filtroBotaoAtivo: { background: "#1e293b", color: "#e2e8f0", borderColor: "#7c8fa8" },
+  filtroBotaoAtivo: { background: "rgba(16,185,129,0.1)", color: "#10b981", borderColor: "rgba(16,185,129,0.4)" },
   btnNovo: {
-    background: "#1d4ed8", border: "none", borderRadius: 10,
+    background: "linear-gradient(135deg, #10b981, #14b8a6)", border: "none", borderRadius: 10,
     color: "#fff", padding: "8px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer",
   },
   resumo: {
     display: "flex", gap: 16, padding: "16px 20px",
-    borderBottom: "1px solid #1e293b", flexWrap: "wrap",
+    borderBottom: "1px solid #2a2f3e", flexWrap: "wrap",
   },
   resumoBloco: { display: "flex", flexDirection: "column", gap: 2 },
   resumoLabel: { fontSize: 11, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
   resumoValor: { fontSize: 22, fontWeight: 800, letterSpacing: -0.5 },
   body: { display: "flex", flexDirection: "column", gap: 16, padding: "20px", maxWidth: 800, margin: "0 auto" },
   loadingWrap: { display: "flex", alignItems: "center", justifyContent: "center", padding: 80 },
-  spinner: { width: 32, height: 32, borderRadius: "50%", border: "3px solid #1e293b", borderTopColor: "#3b82f6", animation: "spin 0.8s linear infinite" },
+  spinner: { width: 32, height: 32, borderRadius: "50%", border: "3px solid #2a2f3e", borderTopColor: "#10b981", animation: "spin 0.8s linear infinite" },
   vazio: { display: "flex", flexDirection: "column", alignItems: "center", padding: 60, textAlign: "center", lineHeight: 1.8 },
-  card: { background: "#0a1628", border: "1px solid", borderRadius: 16, padding: "20px", display: "flex", flexDirection: "column", gap: 16 },
+  card: { background: "#1a1f2e", border: "1px solid", borderRadius: 16, padding: "20px", display: "flex", flexDirection: "column", gap: 16 },
   cardHeader:      { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 },
   cardNome:        { fontSize: 16, fontWeight: 800, color: "#e2e8f0" },
   cardCredor:      { fontSize: 12, color: "#94a3b8", marginTop: 2 },
   cardAcoes:       { display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" },
-  btnAcaoCard:     { background: "#1e293b", border: "1px solid #334155", borderRadius: 8, color: "#cbd5e1", padding: "6px 10px", fontSize: 12, cursor: "pointer" },
+  btnAcaoCard:     { background: "#1a1f2e", border: "1px solid #2a2f3e", borderRadius: 8, color: "#cbd5e1", padding: "6px 10px", fontSize: 12, cursor: "pointer" },
   btnAcaoPerigo:   { background: "#1a0a0a", border: "1px solid #7f1d1d", borderRadius: 8, color: "#fca5a5", padding: "6px 10px", fontSize: 12, cursor: "pointer" },
-  cardParcela:     { fontSize: 20, fontWeight: 800, color: "#3b82f6", textAlign: "right" },
+  cardParcela:     { fontSize: 20, fontWeight: 800, color: "#10b981", textAlign: "right" },
   cardParcelaLabel:{ fontSize: 11, color: "#94a3b8", fontWeight: 400 },
   badge:           { display: "inline-block", fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, marginTop: 4 },
   barraLabel:      { fontSize: 11, color: "#94a3b8" },
-  barraFundo:      { width: "100%", height: 8, background: "#1e293b", borderRadius: 99, overflow: "hidden" },
+  barraFundo:      { width: "100%", height: 8, background: "#2a2f3e", borderRadius: 99, overflow: "hidden" },
   barraPreenchida: { height: "100%", borderRadius: 99, transition: "width 0.6s ease" },
-  cardInfo:        { display: "flex", gap: 0, borderTop: "1px solid #1e293b", paddingTop: 12 },
+  cardInfo:        { display: "flex", gap: 0, borderTop: "1px solid #2a2f3e", paddingTop: 12 },
   cardInfoBloco:   { flex: 1, display: "flex", flexDirection: "column", gap: 2 },
   cardInfoLabel:   { fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
   cardInfoValor:   { fontSize: 13, fontWeight: 700, color: "#94a3b8" },
-  proximaParcela:  { background: "#0f172a", borderRadius: 10, padding: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" },
-  btnPagar:        { background: "#1d4ed8", border: "none", borderRadius: 8, color: "#fff", padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" },
-  btnExpandir:     { background: "none", border: "1px solid #1e293b", borderRadius: 8, color: "#94a3b8", padding: "8px", fontSize: 12, cursor: "pointer", textAlign: "center" },
+  proximaParcela:  { background: "#141824", borderRadius: 10, padding: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" },
+  btnPagar:        { background: "linear-gradient(135deg, #10b981, #14b8a6)", border: "none", borderRadius: 8, color: "#fff", padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" },
+  btnExpandir:     { background: "none", border: "1px solid #2a2f3e", borderRadius: 8, color: "#94a3b8", padding: "8px", fontSize: 12, cursor: "pointer", textAlign: "center" },
   listaParcelas:   { display: "flex", flexDirection: "column", gap: 2, maxHeight: 300, overflowY: "auto", borderRadius: 8 },
   linhaParcela:    { display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 6, flexWrap: "wrap" },
   parcelaNum:      { fontSize: 11, color: "#94a3b8", minWidth: 28 },
   parcelaData:     { fontSize: 12, color: "#94a3b8", minWidth: 80 },
   parcelaValor:    { fontSize: 12, fontWeight: 700, color: "#cbd5e1", flex: 1 },
   parcelaStatus:   { fontSize: 11, fontWeight: 600 },
-  btnPagarMini:    { background: "#0f172a", border: "1px solid #1e293b", borderRadius: 6, color: "#94a3b8", padding: "4px 10px", fontSize: 11, cursor: "pointer" },
+  btnPagarMini:    { background: "#141824", border: "1px solid #2a2f3e", borderRadius: 6, color: "#94a3b8", padding: "4px 10px", fontSize: 11, cursor: "pointer" },
   overlay:         { position: "fixed", inset: 0, background: "#000000aa", zIndex: 200, display: "flex", alignItems: "flex-end", justifyContent: "center" },
-  modal:           { background: "#0f172a", border: "1px solid #1e293b", borderRadius: "20px 20px 0 0", width: "100%", maxWidth: 520, maxHeight: "90dvh", overflowY: "auto" },
+  modal:           { background: "#1a1f2e", border: "1px solid #2a2f3e", borderRadius: "24px 24px 0 0", width: "100%", maxWidth: 520, maxHeight: "90dvh", overflowY: "auto" },
   modalHeader:     { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 20px 0" },
   modalTitulo:     { fontSize: 18, fontWeight: 800 },
   modalFechar:     { background: "none", border: "none", color: "#94a3b8", fontSize: 18, cursor: "pointer" },
   modalBody:       { padding: "20px", display: "flex", flexDirection: "column", gap: 14 },
   formField:       { display: "flex", flexDirection: "column", gap: 6 },
   formLabel:       { fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 },
-  formInput:       { background: "#1e293b", border: "1px solid #334155", borderRadius: 10, color: "#e2e8f0", padding: "12px 14px", fontSize: 14, outline: "none", fontFamily: "'DM Sans', sans-serif" },
-  btnSalvar:       { background: "#1d4ed8", border: "none", borderRadius: 12, color: "#fff", padding: "14px", fontSize: 15, fontWeight: 700, cursor: "pointer" },
+  formInput:       { background: "#1e2636", border: "1px solid #2a2f3e", borderRadius: 10, color: "#e2e8f0", padding: "12px 14px", fontSize: 14, outline: "none", fontFamily: "system-ui, -apple-system, sans-serif" },
+  btnSalvar:       { background: "linear-gradient(135deg, #10b981, #14b8a6)", border: "none", borderRadius: 12, color: "#fff", padding: "14px", fontSize: 15, fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 12px rgba(16,185,129,0.3)" },
   erro:            { color: "#ef4444", fontSize: 13, background: "#1a0a0a", borderRadius: 8, padding: "10px 14px" },
 };
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #080f1a; }
+  body { background: #0f1419; }
   input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
   @keyframes spin { to { transform: rotate(360deg); } }
 `;

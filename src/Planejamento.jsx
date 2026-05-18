@@ -3,9 +3,9 @@ import { useState, useEffect, useCallback } from "react";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const TIPOS = [
-  { key: "receita",          label: "Receitas",           cor: "#22c55e", bg: "#052e16" },
-  { key: "despesa_fixa",     label: "Despesas Fixas",     cor: "#f97316", bg: "#1c0a00" },
-  { key: "despesa_variavel", label: "Despesas Variáveis", cor: "#3b82f6", bg: "#0c1a2e" },
+  { key: "receita",          label: "Receitas",           cor: "#10b981", bg: "rgba(16,185,129,0.06)" },
+  { key: "despesa_fixa",     label: "Despesas Fixas",     cor: "#f97316", bg: "rgba(249,115,22,0.06)" },
+  { key: "despesa_variavel", label: "Despesas Variáveis", cor: "#3b82f6", bg: "rgba(59,130,246,0.06)" },
 ];
 
 const MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho",
@@ -52,7 +52,7 @@ function CelulaValor({ valor, onChange, saving }) {
 
   return (
     <span
-      style={{ ...s.celulaValor, color: valor > 0 ? "#e2e8f0" : "#7c8fa8", cursor: saving ? "default" : "pointer" }}
+      style={{ ...s.celulaValor, color: valor > 0 ? "#e2e8f0" : "#6b7280", cursor: saving ? "default" : "pointer" }}
       onClick={saving ? undefined : iniciarEdicao}
       title="Clique para editar"
     >
@@ -66,7 +66,7 @@ export default function Planejamento() {
   const [mes, setMes]           = useState(hoje.getMonth() + 1);
   const [ano, setAno]           = useState(hoje.getFullYear());
   const [categorias, setCats]   = useState([]);
-  const [plano, setPlano]       = useState({});   // { categoria_id: { id, valor } }
+  const [plano, setPlano]       = useState({});
   const [parcelasEmprestimos, setParcelasEmprestimos] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [saving, setSaving]     = useState(false);
@@ -78,14 +78,12 @@ export default function Planejamento() {
     setTimeout(() => setToast(null), 2500);
   };
 
-  // Carrega categorias uma vez
   useEffect(() => {
     fetch(`${API_URL}/categorias/?ativo=true`)
       .then(r => r.json())
       .then(setCats);
   }, []);
 
-  // Carrega planejamento e empréstimos do mês/ano selecionado
   const carregarPlano = useCallback(() => {
     setLoading(true);
     Promise.all([
@@ -101,7 +99,6 @@ export default function Planejamento() {
 
   useEffect(() => { carregarPlano(); }, [carregarPlano]);
 
-  // Edita valor localmente
   function editarValor(categoria_id, novoValor) {
     setPlano(prev => ({
       ...prev,
@@ -109,7 +106,6 @@ export default function Planejamento() {
     }));
   }
 
-  // Salva todas as alterações pendentes
   async function salvarTudo() {
     setSaving(true);
     const dirty = Object.entries(plano).filter(([, v]) => v.dirty);
@@ -130,7 +126,6 @@ export default function Planejamento() {
     }
   }
 
-  // Copia planejamento do mês anterior
   async function copiarMesAnterior() {
     const mesAnt = mes === 1 ? 12 : mes - 1;
     const anoAnt = mes === 1 ? ano - 1 : ano;
@@ -171,11 +166,12 @@ export default function Planejamento() {
       {/* Cabeçalho */}
       <div style={s.topbar}>
         <div>
-          <div style={s.topbarTitle}>Planejamento Mensal</div>
+          <div style={s.topbarTitle}>
+            <span className="title-gradient">Planejamento Mensal</span>
+          </div>
           <div style={s.topbarSub}>Finança Familiar</div>
         </div>
         <div style={s.topbarControls}>
-          {/* Seletor mês/ano */}
           <div style={s.mesSelector}>
             <button style={s.navBtn} onClick={() => {
               if (mes === 1) { setMes(12); setAno(a => a - 1); }
@@ -202,17 +198,17 @@ export default function Planejamento() {
 
       {/* Cards de resumo */}
       <div style={s.resumoRow}>
-        <div style={{ ...s.resumoCard, borderColor: "#22c55e" }}>
-          <span style={{ ...s.resumoLabel, color: "#22c55e" }}>Receitas</span>
+        <div style={{ ...s.resumoCard, borderColor: "#10b981" }}>
+          <span style={{ ...s.resumoLabel, color: "#10b981" }}>Receitas</span>
           <span style={s.resumoValor}>{fmtBRL(totalReceitas)}</span>
         </div>
         <div style={{ ...s.resumoCard, borderColor: "#ef4444" }}>
           <span style={{ ...s.resumoLabel, color: "#ef4444" }}>Despesas</span>
           <span style={s.resumoValor}>{fmtBRL(totalDespesas)}</span>
         </div>
-        <div style={{ ...s.resumoCard, borderColor: saldo >= 0 ? "#22c55e" : "#ef4444" }}>
-          <span style={{ ...s.resumoLabel, color: saldo >= 0 ? "#22c55e" : "#ef4444" }}>Saldo</span>
-          <span style={{ ...s.resumoValor, color: saldo >= 0 ? "#22c55e" : "#ef4444" }}>{fmtBRL(saldo)}</span>
+        <div style={{ ...s.resumoCard, borderColor: saldo >= 0 ? "#10b981" : "#ef4444" }}>
+          <span style={{ ...s.resumoLabel, color: saldo >= 0 ? "#10b981" : "#ef4444" }}>Saldo</span>
+          <span style={{ ...s.resumoValor, color: saldo >= 0 ? "#10b981" : "#ef4444" }}>{fmtBRL(saldo)}</span>
         </div>
       </div>
 
@@ -220,7 +216,7 @@ export default function Planejamento() {
       {loading ? (
         <div style={s.loadingWrap}>
           <div style={s.spinner} />
-          <span style={{ color: "#94a3b8", marginTop: 12 }}>Carregando...</span>
+          <span style={{ color: "#9ca3af", marginTop: 12 }}>Carregando...</span>
         </div>
       ) : (
         <div style={s.tablesWrap}>
@@ -229,15 +225,13 @@ export default function Planejamento() {
             const total = totalPorTipo(tipo.key);
             return (
               <div key={tipo.key} style={s.tableCard}>
-                {/* Cabeçalho da tabela */}
-                <div style={{ ...s.tableHeader, borderBottomColor: tipo.cor }}>
+                <div style={{ ...s.tableHeader, background: tipo.bg, borderBottomColor: tipo.cor }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <div style={{ ...s.tipoTag, background: tipo.bg, color: tipo.cor }}>{tipo.label}</div>
+                    <div style={{ ...s.tipoTag, color: tipo.cor }}>{tipo.label}</div>
                   </div>
                   <span style={{ color: tipo.cor, fontWeight: 700, fontSize: 15 }}>{fmtBRL(total)}</span>
                 </div>
 
-                {/* Linhas */}
                 <table style={s.table}>
                   <thead>
                     <tr>
@@ -247,7 +241,7 @@ export default function Planejamento() {
                   </thead>
                   <tbody>
                     {cats.map((cat, i) => (
-                      <tr key={cat.id} style={{ background: i % 2 === 0 ? "transparent" : "#0f172a" }} className="tr-hover">
+                      <tr key={cat.id} style={{ background: i % 2 === 0 ? "transparent" : "rgba(255,255,255,0.02)" }} className="tr-hover">
                         <td style={s.td}>{cat.nome}</td>
                         <td style={{ ...s.td, textAlign: "right" }}>
                           <CelulaValor
@@ -259,10 +253,10 @@ export default function Planejamento() {
                       </tr>
                     ))}
                     {tipo.key === "despesa_fixa" && parcelasEmprestimos.map((parcela, i) => (
-                      <tr key={`emp-${parcela.id}`} style={{ background: (cats.length + i) % 2 === 0 ? "transparent" : "#0f172a" }}>
+                      <tr key={`emp-${parcela.id}`} style={{ background: (cats.length + i) % 2 === 0 ? "transparent" : "rgba(255,255,255,0.02)" }}>
                         <td style={s.td}>
-                          <span style={{ color: "#94a3b8" }}>{parcela.emprestimo?.nome || "Emprestimo"} #{parcela.numero_parcela}</span>
-                          <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: 6, background: "#1e293b", padding: "1px 6px", borderRadius: 4 }}>emprestimo</span>
+                          <span style={{ color: "#9ca3af" }}>{parcela.emprestimo?.nome || "Emprestimo"} #{parcela.numero_parcela}</span>
+                          <span style={{ fontSize: 10, color: "#9ca3af", marginLeft: 6, background: "#1a1f2e", padding: "1px 6px", borderRadius: 4, border: "1px solid #2a2f3e" }}>emprestimo</span>
                         </td>
                         <td style={{ ...s.td, textAlign: "right" }}>
                           <span style={{ color: "#f97316", fontWeight: 700 }}>{fmtBRL(parcela.valor_previsto)}</span>
@@ -281,8 +275,8 @@ export default function Planejamento() {
       {toast && (
         <div style={{
           ...s.toast,
-          background: toast.tipo === "erro" ? "#7f1d1d" : toast.tipo === "aviso" ? "#78350f" : "#14532d",
-          borderColor: toast.tipo === "erro" ? "#ef4444" : toast.tipo === "aviso" ? "#f59e0b" : "#22c55e",
+          background: toast.tipo === "erro" ? "rgba(239,68,68,0.15)" : toast.tipo === "aviso" ? "rgba(250,204,21,0.15)" : "rgba(16,185,129,0.15)",
+          borderColor: toast.tipo === "erro" ? "rgba(239,68,68,0.3)" : toast.tipo === "aviso" ? "rgba(250,204,21,0.3)" : "rgba(16,185,129,0.3)",
         }}>
           {toast.msg}
         </div>
@@ -294,98 +288,97 @@ export default function Planejamento() {
 const s = {
   page: {
     minHeight: "100vh",
-    background: "#080f1a",
-    fontFamily: "'Syne', sans-serif",
-    color: "#e2e8f0",
+    background: "#0f1419",
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    color: "#fff",
     paddingBottom: 60,
   },
   topbar: {
     display: "flex", justifyContent: "space-between", alignItems: "center",
-    padding: "24px 40px",
-    borderBottom: "1px solid #1e293b",
-    background: "#080f1a",
+    padding: "20px 24px",
+    borderBottom: "1px solid #2a2f3e",
+    background: "rgba(15,20,25,0.92)",
     position: "sticky", top: 0, zIndex: 10,
-    backdropFilter: "blur(12px)",
+    backdropFilter: "blur(16px)",
     flexWrap: "wrap", gap: 16,
   },
   topbarTitle: { fontSize: 22, fontWeight: 800, letterSpacing: -0.5 },
-  topbarSub:   { fontSize: 12, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
+  topbarSub:   { fontSize: 12, color: "#9ca3af", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
   topbarControls: { display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" },
   mesSelector: {
     display: "flex", alignItems: "center", gap: 4,
-    background: "#0f172a", borderRadius: 10,
-    border: "1px solid #1e293b", padding: "4px 8px",
+    background: "#1a1f2e", borderRadius: 12,
+    border: "1px solid #2a2f3e", padding: "4px 8px",
   },
-  mesLabel: { fontSize: 14, fontWeight: 700, minWidth: 140, textAlign: "center", color: "#cbd5e1" },
+  mesLabel: { fontSize: 14, fontWeight: 700, minWidth: 140, textAlign: "center", color: "#fff" },
   navBtn: {
-    background: "none", border: "none", color: "#94a3b8",
+    background: "none", border: "none", color: "#9ca3af",
     fontSize: 20, cursor: "pointer", padding: "0 6px", lineHeight: 1,
     borderRadius: 6, transition: "color 0.15s",
   },
   btnCopiar: {
-    background: "#1e293b", border: "1px solid #334155",
-    color: "#94a3b8", borderRadius: 10, padding: "8px 16px",
+    background: "#1a1f2e", border: "1px solid #2a2f3e",
+    color: "#9ca3af", borderRadius: 12, padding: "8px 16px",
     fontSize: 13, fontWeight: 600, cursor: "pointer",
     transition: "all 0.15s",
   },
   btnSalvar: {
-    background: "#1d4ed8", border: "none",
-    color: "#fff", borderRadius: 10, padding: "8px 20px",
+    background: "linear-gradient(135deg, #10b981, #14b8a6)", border: "none",
+    color: "#fff", borderRadius: 12, padding: "8px 20px",
     fontSize: 13, fontWeight: 700, cursor: "pointer",
     transition: "all 0.15s",
   },
   resumoRow: {
     display: "flex", gap: 16,
-    padding: "24px 40px 0",
+    padding: "20px 24px 0",
     flexWrap: "wrap",
   },
   resumoCard: {
     flex: "1 1 160px",
-    background: "#0f172a",
+    background: "#1a1f2e",
     border: "1px solid",
-    borderRadius: 14,
+    borderRadius: 16,
     padding: "16px 20px",
     display: "flex", flexDirection: "column", gap: 4,
   },
   resumoLabel: { fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1 },
-  resumoValor: { fontSize: 22, fontWeight: 800, letterSpacing: -0.5 },
+  resumoValor: { fontSize: 22, fontWeight: 800, letterSpacing: -0.5, color: "#fff" },
   loadingWrap: {
     display: "flex", flexDirection: "column", alignItems: "center",
     justifyContent: "center", padding: 80,
   },
   spinner: {
     width: 32, height: 32, borderRadius: "50%",
-    border: "3px solid #1e293b",
-    borderTopColor: "#3b82f6",
+    border: "3px solid #2a2f3e",
+    borderTopColor: "#10b981",
     animation: "spin 0.8s linear infinite",
   },
   tablesWrap: {
     display: "flex", flexDirection: "column", gap: 24,
-    padding: "24px 40px",
+    padding: "20px 24px",
   },
   tableCard: {
-    background: "#0a1628",
-    border: "1px solid #1e293b",
-    borderRadius: 16,
+    background: "#1a1f2e",
+    border: "1px solid #2a2f3e",
+    borderRadius: 20,
     overflow: "hidden",
   },
   tableHeader: {
     display: "flex", justifyContent: "space-between", alignItems: "center",
     padding: "16px 20px",
     borderBottom: "1px solid",
-    background: "#0f172a",
   },
   tipoTag: {
     fontSize: 12, fontWeight: 700, textTransform: "uppercase",
-    letterSpacing: 1, padding: "4px 10px", borderRadius: 6,
+    letterSpacing: 1,
   },
   table: { width: "100%", borderCollapse: "collapse" },
   th: {
     padding: "10px 20px", fontSize: 11, fontWeight: 700,
-    color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8,
+    color: "#9ca3af", textTransform: "uppercase", letterSpacing: 0.8,
     textAlign: "left",
   },
-  td: { padding: "12px 20px", fontSize: 14, color: "#cbd5e1", borderTop: "1px solid #0f172a" },
+  td: { padding: "12px 20px", fontSize: 14, color: "#fff", borderTop: "1px solid #2a2f3e" },
   celulaValor: {
     display: "inline-block",
     padding: "4px 10px",
@@ -394,28 +387,33 @@ const s = {
     transition: "background 0.15s",
   },
   celulaInput: {
-    background: "#1e293b", border: "1px solid #3b82f6",
-    borderRadius: 6, color: "#e2e8f0",
+    background: "#0f1419", border: "1px solid #10b981",
+    borderRadius: 6, color: "#fff",
     padding: "4px 10px", fontSize: 14, fontWeight: 600,
     outline: "none", width: 140, textAlign: "right",
-    fontFamily: "'Syne', sans-serif",
+    fontFamily: "system-ui, -apple-system, sans-serif",
   },
   toast: {
     position: "fixed", bottom: 32, right: 32,
     padding: "14px 24px", borderRadius: 12,
     border: "1px solid", fontSize: 13, fontWeight: 600,
-    color: "#e2e8f0", boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+    color: "#fff", boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
     animation: "slideIn 0.3s ease",
     maxWidth: 360,
   },
 };
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #080f1a; }
-  .tr-hover:hover td { background: #131f35 !important; }
-  .btn-salvar:hover:not(:disabled) { background: #2563eb !important; }
+  body { background: #0f1419; }
+  .title-gradient {
+    background: linear-gradient(90deg, #fff 40%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .tr-hover:hover td { background: rgba(255,255,255,0.03) !important; }
+  .btn-salvar:hover:not(:disabled) { opacity: 0.88; }
   @keyframes spin { to { transform: rotate(360deg); } }
   @keyframes slideIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
 `;

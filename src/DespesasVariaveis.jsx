@@ -22,7 +22,7 @@ function CartaoCategoria({ item }) {
   const estouro    = realizado > planejado && planejado > 0;
   const restante   = planejado - realizado;
 
-  const corBarra = estouro ? "#ef4444" : percentual >= 80 ? "#f59e0b" : "#3b82f6";
+  const corBarra = estouro ? "#ef4444" : percentual >= 80 ? "#f59e0b" : "#10b981";
 
   return (
     <div style={s.cartao} className="cartao-item">
@@ -129,7 +129,7 @@ export default function DespesasVariaveis() {
           <div style={s.resumo}>
             <div style={s.resumoEsquerda}>
               <div style={s.resumoValorGrande}>
-                <span style={{ color: estouroTotal ? "#ef4444" : "#3b82f6" }}>{fmtBRL(totalReal)}</span>
+                <span style={{ color: estouroTotal ? "#ef4444" : "#10b981" }}>{fmtBRL(totalReal)}</span>
                 <span style={s.resumoSep}>/</span>
                 <span style={s.resumoPlan}>{fmtBRL(totalPlan)}</span>
               </div>
@@ -139,7 +139,7 @@ export default function DespesasVariaveis() {
                 <div style={{
                   ...s.barraPreenchida,
                   width: `${Math.min(totalPct, 100)}%`,
-                  background: estouroTotal ? "#ef4444" : totalPct >= 80 ? "#f59e0b" : "#3b82f6",
+                  background: estouroTotal ? "#ef4444" : totalPct >= 80 ? "#f59e0b" : "#10b981",
                   boxShadow: "none",
                 }} />
               </div>
@@ -174,7 +174,7 @@ export default function DespesasVariaveis() {
             </div>
           )}
 
-          {/* Grid de cartões */}
+          {/* Grid de cartoes */}
           <div style={s.grid}>
             {itens
               .sort((a, b) => {
@@ -200,25 +200,25 @@ export default function DespesasVariaveis() {
 const s = {
   page: {
     minHeight: "100vh",
-    background: "#080f1a",
-    fontFamily: "'DM Sans', sans-serif",
+    background: "#0f1419",
+    fontFamily: "system-ui, -apple-system, sans-serif",
     color: "#e2e8f0",
     paddingBottom: 80,
   },
   topbar: {
     display: "flex", justifyContent: "space-between", alignItems: "center",
     padding: "20px 20px",
-    borderBottom: "1px solid #1e293b",
+    borderBottom: "1px solid #2a2f3e",
     position: "sticky", top: 0, zIndex: 10,
-    background: "#080f1acc", backdropFilter: "blur(12px)",
+    background: "rgba(15,20,25,0.92)", backdropFilter: "blur(12px)",
     flexWrap: "wrap", gap: 12,
   },
   topbarTitle: { fontSize: 20, fontWeight: 800, letterSpacing: -0.5 },
   topbarSub:   { fontSize: 11, color: "#94a3b8", marginTop: 2, letterSpacing: 1, textTransform: "uppercase" },
   mesSelector: {
     display: "flex", alignItems: "center", gap: 4,
-    background: "#0f172a", borderRadius: 10,
-    border: "1px solid #1e293b", padding: "4px 8px",
+    background: "#1a1f2e", borderRadius: 10,
+    border: "1px solid #2a2f3e", padding: "4px 8px",
   },
   mesLabel: { fontSize: 13, fontWeight: 700, minWidth: 140, textAlign: "center", color: "#cbd5e1" },
   navBtn: {
@@ -230,7 +230,7 @@ const s = {
   },
   spinner: {
     width: 32, height: 32, borderRadius: "50%",
-    border: "3px solid #1e293b", borderTopColor: "#3b82f6",
+    border: "3px solid #2a2f3e", borderTopColor: "#10b981",
     animation: "spin 0.8s linear infinite",
   },
   body: {
@@ -239,7 +239,7 @@ const s = {
     maxWidth: 960, margin: "0 auto",
   },
   resumo: {
-    background: "#0f172a", border: "1px solid #1e293b",
+    background: "#1a1f2e", border: "1px solid #2a2f3e",
     borderRadius: 16, padding: "20px 24px",
     display: "flex", justifyContent: "space-between",
     alignItems: "flex-start", gap: 16, flexWrap: "wrap",
@@ -256,7 +256,7 @@ const s = {
   resumoLegenda: { fontSize: 11, color: "#94a3b8", marginTop: 4, textTransform: "uppercase", letterSpacing: 0.8 },
   badge: {
     fontSize: 12, fontWeight: 600, padding: "6px 12px",
-    borderRadius: 20, background: "#0a1628", border: "1px solid #1e293b",
+    borderRadius: 20, background: "#1a1f2e", border: "1px solid #2a2f3e",
     color: "#94a3b8",
   },
   vazio: {
@@ -269,7 +269,7 @@ const s = {
     gap: 16,
   },
   cartao: {
-    background: "#0a1628", border: "1px solid #1e293b",
+    background: "#1a1f2e", border: "1px solid #2a2f3e",
     borderRadius: 14, padding: "16px",
     display: "flex", flexDirection: "column", gap: 12,
     transition: "border-color 0.2s",
@@ -282,11 +282,11 @@ const s = {
     fontSize: 14, fontWeight: 700, color: "#cbd5e1",
   },
   cartaoPct: {
-    fontSize: 13, fontWeight: 800, color: "#3b82f6",
-    background: "#0c1a2e", padding: "2px 10px", borderRadius: 20,
+    fontSize: 13, fontWeight: 800, color: "#10b981",
+    background: "rgba(16,185,129,0.12)", padding: "2px 10px", borderRadius: 20,
   },
   barraFundo: {
-    width: "100%", height: 8, background: "#1e293b",
+    width: "100%", height: 8, background: "#2a2f3e",
     borderRadius: 99, overflow: "hidden",
   },
   barraPreenchida: {
@@ -304,10 +304,9 @@ const s = {
 };
 
 const css = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #080f1a; }
-  .cartao-item:hover { border-color: #334155 !important; }
+  body { background: #0f1419; }
+  .cartao-item:hover { border-color: #3a4050 !important; }
   [data-estouro="true"] { color: #ef4444 !important; }
   [data-tipo="estouro"] { border-color: #7f1d1d !important; color: #fca5a5 !important; }
   [data-tipo="atencao"] { border-color: #78350f !important; color: #fcd34d !important; }
